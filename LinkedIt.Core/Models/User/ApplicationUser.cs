@@ -23,8 +23,8 @@ namespace LinkedIt.Core.Models.User
 
 
 
-		public ICollection<UserFollow> Followers { get; set; }
-		public ICollection<UserFollow> Followings { get; set; }
+		public ICollection<UserFollow>? Followers { get; set; }
+		public ICollection<UserFollow>? Followings { get; set; }
 
 
 	}
