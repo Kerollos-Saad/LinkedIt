@@ -1,0 +1,6 @@
+@LinkedIt.API_HostAddress = http://localhost:5205
+
+GET {{LinkedIt.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
