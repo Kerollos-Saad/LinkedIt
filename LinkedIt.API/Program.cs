@@ -1,4 +1,5 @@
 using LinkedIt.Core.Models.User;
+using LinkedIt.Core.Mapper;
 using LinkedIt.DataAcess.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +19,13 @@ namespace LinkedIt.API
 	            options.UseSqlServer(connectionString));
 
             // Register Auto Mapper
+            builder.Services.AddAutoMapper(typeof(MappingConfig));
 
-			// Register Generic Repository
+			// // Register Generic Repository 
 
 			// Register Unit Of Work
 
-			// Register Identity 
+			// Register Configure Identity 
 			builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 				.AddEntityFrameworkStores<ApplicationDbContext>()
 				.AddDefaultTokenProviders();
@@ -32,6 +34,8 @@ namespace LinkedIt.API
 			builder.Services.AddScoped<SignInManager<ApplicationUser>>();
 			builder.Services.AddScoped<RoleManager<IdentityRole>>();
 
+
+            // Add Services
 
 
 

@@ -9,7 +9,7 @@ using LinkedIt.Core.Models.User;
 
 namespace LinkedIt.Core.Mapper
 {
-	internal class MappingConfig : AutoMapper.Profile
+	public class MappingConfig : AutoMapper.Profile
 	{
 		public MappingConfig()
 		{
