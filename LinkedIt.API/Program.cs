@@ -1,8 +1,11 @@
+using System.Text;
 using LinkedIt.Core.Models.User;
 using LinkedIt.Core.Mapper;
 using LinkedIt.DataAcess.Context;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace LinkedIt.API
 {
@@ -35,11 +38,37 @@ namespace LinkedIt.API
 			builder.Services.AddScoped<RoleManager<IdentityRole>>();
 
 
-            // Add Services
+			// Add Services
 
 
+			// Add OpenAPI with Bearer Authentication Support
+			#region JWT
 
+				builder.Services.AddOpenApi("v1", options =>
+				{
+					options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+				});
 
+				// Configure JWT Authentication insted of cookies
+				var key = Encoding.ASCII.GetBytes(builder.Configuration["JWTSettings:Key"]);
+				builder.Services.AddAuthentication(options =>
+				{
+					options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+					options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+				})
+				.AddJwtBearer(options =>
+				{
+					options.TokenValidationParameters = new TokenValidationParameters
+					{
+						ValidateIssuerSigningKey = true,
+						IssuerSigningKey = new SymmetricSecurityKey(key),
+						ValidateIssuer = false,
+						ValidateAudience = false,
+						ClockSkew = TimeSpan.FromMinutes(5)
+					};
+				});
+
+			#endregion
 
 
 			// Add services to the container.

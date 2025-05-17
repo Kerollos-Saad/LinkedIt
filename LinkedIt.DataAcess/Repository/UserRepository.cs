@@ -26,6 +26,7 @@ namespace LinkedIt.DataAcess.Repository
 
 		private readonly IConfiguration _configuration; // To Get API Key
 		private string securityKey;
+		private int tokenDuration;
 
 		// Authentication
 		private readonly IMapper _mapper;
@@ -40,9 +41,10 @@ namespace LinkedIt.DataAcess.Repository
 			this._mapper = mapper;
 
 			//Need To install Package `Microsoft.Extensions.Configuration.Binder` and the method `GetValue` will be available
-			securityKey = _configuration.GetValue<string>("ApiSettings:Secret") ??
-			              throw new InvalidOperationException("ApiSettings:Secret is not configured.");
-
+			securityKey = _configuration.GetValue<string>("JWTSettings:Key") ??
+			              throw new InvalidOperationException("JWTSettings:Key is not configured.");
+			tokenDuration = _configuration.GetValue<int?>("JWTSettings:DurationInMinutes") ??
+			                throw new InvalidOperationException("JWTSettings:Key is not configured.");
 		}
 
 		public async Task<bool> IsUniqueUserName(string userName)
@@ -97,7 +99,7 @@ namespace LinkedIt.DataAcess.Repository
 
 			var token = new JwtSecurityToken(
 				claims: claims,
-				expires: DateTime.UtcNow.AddHours(6),
+				expires: DateTime.UtcNow.AddMinutes(tokenDuration),
 				signingCredentials: credentials
 			);
 
