@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LinkedIt.Core.DTOs.Authentication
 {
-	internal class LoginRequestDTO
+	public class LoginRequestDTO
 	{
 		[Required]
 		public String UserName { get; set; }

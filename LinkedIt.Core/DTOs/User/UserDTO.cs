@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LinkedIt.Core.DTOs.User
 {
-	internal class UserDTO
+	public class UserDTO
 	{
 		public string UserName { get; set; }
 		public string FirstName { get; set; }

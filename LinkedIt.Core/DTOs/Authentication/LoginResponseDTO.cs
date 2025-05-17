@@ -7,7 +7,7 @@ using LinkedIt.Core.DTOs.User;
 
 namespace LinkedIt.Core.DTOs.Authentication
 {
-	internal class LoginResponseDTO
+	public class LoginResponseDTO
 	{
 		public UserDTO User { get; set; }
 		public String Token { get; set; }
