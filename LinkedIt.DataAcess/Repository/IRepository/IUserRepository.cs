@@ -9,7 +9,7 @@ using LinkedIt.Core.DTOs.User;
 
 namespace LinkedIt.DataAcess.Repository.IRepository
 {
-	internal interface IUserRepository : IGenericRepository<ApplicationUser>
+	public interface IUserRepository : IGenericRepository<ApplicationUser>
 	{
 		Task<bool> IsUniqueUserName(string userName);
 		Task<ApplicationUser> GetUserById(string userId);

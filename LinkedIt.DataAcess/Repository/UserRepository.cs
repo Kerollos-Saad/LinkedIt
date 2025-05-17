@@ -17,7 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace LinkedIt.DataAcess.Repository
 {
-	internal class UserRepository : GenericRepository<ApplicationUser>, IUserRepository
+	public class UserRepository : GenericRepository<ApplicationUser>, IUserRepository
 	{
 
 		private readonly ApplicationDbContext _db;

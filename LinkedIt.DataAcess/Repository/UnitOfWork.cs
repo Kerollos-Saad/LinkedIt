@@ -1,0 +1,44 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using AutoMapper;
+using LinkedIt.Core.Models.User;
+using LinkedIt.DataAcess.Context;
+using LinkedIt.DataAcess.Repository.IRepository;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+
+namespace LinkedIt.DataAcess.Repository
+{
+	public class UnitOfWork : IUnitOfWork
+	{
+		private readonly ApplicationDbContext _db;
+
+		private readonly IMapper _mapper;
+		private readonly IConfiguration _config;
+
+		private readonly UserManager<ApplicationUser> _userManager;
+		private readonly RoleManager<IdentityRole> _roleManager;
+
+		public IUserRepository User { get; private set; }
+
+		public UnitOfWork(ApplicationDbContext db, IMapper mapper, IConfiguration config,
+			UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+		{
+			this._db = db;
+			this._mapper = mapper;
+			this._config = config;
+			this._userManager = userManager;
+			this._roleManager = roleManager;
+
+			User = new UserRepository(db, userManager, roleManager, config, mapper);
+		}
+
+		public async Task SaveAsync()
+		{
+			await _db.SaveChangesAsync();
+		}
+	}
+}

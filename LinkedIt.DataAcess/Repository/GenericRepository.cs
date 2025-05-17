@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LinkedIt.DataAcess.Repository
 {
-	internal class GenericRepository<T> : IGenericRepository<T> where T : class
+	public class GenericRepository<T> : IGenericRepository<T> where T : class
 	{
 		private readonly ApplicationDbContext _db;
 		internal DbSet<T> DbSet;

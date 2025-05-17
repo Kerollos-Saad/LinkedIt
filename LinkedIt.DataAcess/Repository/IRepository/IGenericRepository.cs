@@ -8,7 +8,7 @@ using LinkedIt.Core.Constants;
 
 namespace LinkedIt.DataAcess.Repository.IRepository
 {
-	internal interface IGenericRepository<T> where T : class
+	public interface IGenericRepository<T> where T : class
 	{
 		// ---------------------------------------------------------------------
 		// ---------------------------------------------------------------------
