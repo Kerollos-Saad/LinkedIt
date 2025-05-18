@@ -6,14 +6,17 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5205"
+      "applicationUrl": "http://localhost:5205",
+      "launchBrowser": true,
+      "launchUrl": "swagger"
     },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "launchUrl": "swagger"
     }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json",
