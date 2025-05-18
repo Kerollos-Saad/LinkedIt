@@ -1,4 +1,7 @@
-﻿using LinkedIt.Services.ControllerServices.IControllerServices;
+﻿using System.Net;
+using LinkedIt.Core.DTOs.AppUsers;
+using LinkedIt.Core.DTOs.Authentication;
+using LinkedIt.Services.ControllerServices.IControllerServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,10 +19,29 @@ namespace LinkedIt.API.Controllers
 			this._authService = authService;
 		}
 
-		[HttpGet("hi")]
-		public async Task<IActionResult> Hi()
+		[HttpPost("login")]
+		public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequestDto)
 		{
-			return Ok();
+			var response = await _authService.LoginAsync(loginRequestDto);
+
+			if (response.IsSuccess)
+				return Ok(response);
+			
+			return BadRequest(response);
+		}
+
+		[HttpPost("register")]
+		public async Task<IActionResult> Register([FromBody] ApplicationUserToAddUserDTO registerRequestDto)
+		{
+			var response = await _authService.RegisterAsync(registerRequestDto);
+
+			if (response.IsSuccess)
+				return Ok(response);
+
+			if (response.StatusCode == HttpStatusCode.InternalServerError)
+				return StatusCode(500, response);
+
+			return BadRequest(response);
 		}
 
 	}
