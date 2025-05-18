@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinkedIt.DataAcess", "Linke
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinkedIt.Core", "LinkedIt.Core\LinkedIt.Core.csproj", "{17685D30-C0E3-4C6B-B588-9C78374F1213}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinkedIt.Services", "LinkedIt.Services\LinkedIt.Services.csproj", "{52016133-3B5B-4E70-BE24-379F11E48D68}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{17685D30-C0E3-4C6B-B588-9C78374F1213}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17685D30-C0E3-4C6B-B588-9C78374F1213}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17685D30-C0E3-4C6B-B588-9C78374F1213}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52016133-3B5B-4E70-BE24-379F11E48D68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52016133-3B5B-4E70-BE24-379F11E48D68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52016133-3B5B-4E70-BE24-379F11E48D68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52016133-3B5B-4E70-BE24-379F11E48D68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

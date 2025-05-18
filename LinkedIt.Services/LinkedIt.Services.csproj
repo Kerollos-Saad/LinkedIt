@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ControllerService\IControllerService\" />
+    <ProjectReference Include="..\LinkedIt.Core\LinkedIt.Core.csproj" />
+    <ProjectReference Include="..\LinkedIt.DataAcess\LinkedIt.DataAcess.csproj" />
   </ItemGroup>
 
 </Project>
