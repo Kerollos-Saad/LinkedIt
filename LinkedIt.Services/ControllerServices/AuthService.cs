@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace LinkedIt.Services.ControllerServices
 {
-	internal class AuthService : IAuthService
+	public class AuthService : IAuthService
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IMapper _mapper;

@@ -2,6 +2,10 @@ using System.Text;
 using LinkedIt.Core.Models.User;
 using LinkedIt.Core.Mapper;
 using LinkedIt.DataAcess.Context;
+using LinkedIt.DataAcess.Repository;
+using LinkedIt.DataAcess.Repository.IRepository;
+using LinkedIt.Services.ControllerServices;
+using LinkedIt.Services.ControllerServices.IControllerServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -24,9 +28,9 @@ namespace LinkedIt.API
             // Register Auto Mapper
             builder.Services.AddAutoMapper(typeof(MappingConfig));
 
-			// // Register Generic Repository 
-
+			//// No need for Register Generic Repository We Will Deal With Unit Of Work Until now 
 			// Register Unit Of Work
+			builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 			// Register Configure Identity 
 			builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -37,36 +41,36 @@ namespace LinkedIt.API
 			builder.Services.AddScoped<SignInManager<ApplicationUser>>();
 			builder.Services.AddScoped<RoleManager<IdentityRole>>();
 
-
 			// Add Services
+			builder.Services.AddScoped<IAuthService, AuthService>();
 
 
 			// Add OpenAPI with Bearer Authentication Support
 			#region JWT
 
-				builder.Services.AddOpenApi("v1", options =>
-				{
-					options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
-				});
+			builder.Services.AddOpenApi("v1", options =>
+			{
+				options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+			});
 
-				// Configure JWT Authentication insted of cookies
-				var key = Encoding.ASCII.GetBytes(builder.Configuration["JWTSettings:Key"]);
-				builder.Services.AddAuthentication(options =>
+			// Configure JWT Authentication insted of cookies
+			var key = Encoding.ASCII.GetBytes(builder.Configuration["JWTSettings:Key"]);
+			builder.Services.AddAuthentication(options =>
+			{
+				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			})
+			.AddJwtBearer(options =>
+			{
+				options.TokenValidationParameters = new TokenValidationParameters
 				{
-					options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-					options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-				})
-				.AddJwtBearer(options =>
-				{
-					options.TokenValidationParameters = new TokenValidationParameters
-					{
-						ValidateIssuerSigningKey = true,
-						IssuerSigningKey = new SymmetricSecurityKey(key),
-						ValidateIssuer = false,
-						ValidateAudience = false,
-						ClockSkew = TimeSpan.FromMinutes(5)
-					};
-				});
+					ValidateIssuerSigningKey = true,
+					IssuerSigningKey = new SymmetricSecurityKey(key),
+					ValidateIssuer = false,
+					ValidateAudience = false,
+					ClockSkew = TimeSpan.FromMinutes(5)
+				};
+			});
 
 			#endregion
 

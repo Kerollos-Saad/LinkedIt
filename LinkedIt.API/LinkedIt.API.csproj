@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LinkedIt.DataAcess\LinkedIt.DataAcess.csproj" />
+    <ProjectReference Include="..\LinkedIt.Services\LinkedIt.Services.csproj" />
   </ItemGroup>
 
 </Project>
