@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using LinkedIt.Core.DTOs.AppUsers;
 using LinkedIt.Core.DTOs.Authentication;
 using LinkedIt.Core.Models.User;
 using LinkedIt.Core.Response;
@@ -22,13 +23,15 @@ namespace LinkedIt.Services.ControllerServices
 
 		private APIResponse response;
 
-		public AuthService(IUnitOfWork unitOfWork)
+		public AuthService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager)
 		{
 			this._unitOfWork = unitOfWork;
+			this._mapper = mapper;
+			this._userManager = userManager;
 			response = new APIResponse();
 		}
 
-		public async Task<object> LoginAsync(LoginRequestDTO loginRequestDTO)
+		public async Task<APIResponse> LoginAsync(LoginRequestDTO loginRequestDTO)
 		{
 			var responseLogin = await _unitOfWork.User.Login(loginRequestDTO);
 			if (responseLogin == null || string.IsNullOrEmpty(responseLogin.Token))
@@ -41,12 +44,12 @@ namespace LinkedIt.Services.ControllerServices
 			return response;
 		}
 
-		public async Task<object> RegisterAsync(RegisterRequestDTO registerRequestDTO)
+		public async Task<APIResponse> RegisterAsync(ApplicationUserToAddUserDTO registerDTO)
 		{
 			var response = new APIResponse();
 
 			// Validate Request Data
-			if (registerRequestDTO == null)
+			if (registerDTO == null)
 			{
 				response.SetResponseInfo(HttpStatusCode.BadRequest, new List<string> { "Registration data is null" },
 					null, false);
@@ -54,7 +57,7 @@ namespace LinkedIt.Services.ControllerServices
 			}
 
 			// Unique User Name
-			bool isUnique = await _unitOfWork.User.IsUniqueUserName(registerRequestDTO.UserName);
+			bool isUnique = await _unitOfWork.User.IsUniqueUserName(registerDTO.UserName);
 			if (!isUnique)
 			{
 				response.SetResponseInfo(HttpStatusCode.BadRequest, new List<string> { "Registration data is null" },
@@ -62,10 +65,14 @@ namespace LinkedIt.Services.ControllerServices
 				return response;
 			}
 
-			var user = _mapper.Map<ApplicationUser>(registerRequestDTO);
+			var user = _mapper.Map<ApplicationUser>(registerDTO);
+
+
+
 			try
 			{
-				var result = await _userManager.CreateAsync(user, registerRequestDTO.Password);
+				var result = await _userManager.CreateAsync(user, registerDTO.Password);
+
 				if (!result.Succeeded)
 				{
 					response.SetResponseInfo(HttpStatusCode.BadRequest,
@@ -74,7 +81,7 @@ namespace LinkedIt.Services.ControllerServices
 					return response;
 				}
 
-				response.SetResponseInfo(HttpStatusCode.Created, null, registerRequestDTO, true);
+				response.SetResponseInfo(HttpStatusCode.Created, null, registerDTO, true);
 				return response;
 			}
 			catch (Exception ex)
