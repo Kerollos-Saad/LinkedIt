@@ -50,10 +50,10 @@ namespace LinkedIt.API
 			// Add OpenAPI with Bearer Authentication Support
 			#region JWT
 
-			builder.Services.AddOpenApi("v1", options =>
-			{
-				options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
-			});
+			//builder.Services.AddOpenApi("v1", options =>
+			//{
+			//	options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+			//});
 
 			// Configure JWT Authentication insted of cookies
 			var key = Encoding.ASCII.GetBytes(builder.Configuration["JWTSettings:Key"]);
@@ -64,6 +64,7 @@ namespace LinkedIt.API
 			})
 			.AddJwtBearer(options =>
 			{
+				options.SaveToken = true;
 				options.TokenValidationParameters = new TokenValidationParameters
 				{
 					ValidateIssuerSigningKey = true,
@@ -94,8 +95,8 @@ namespace LinkedIt.API
                 app.UseSwaggerUI();
 			}
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+			// app.UseAuthentication(); By default Work By "Cookie" ==> To Work With JWT ==> AddAuthentication(options)
+			app.UseAuthorization();
 
             app.MapControllers();
 

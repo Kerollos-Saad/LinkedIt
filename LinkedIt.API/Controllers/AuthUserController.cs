@@ -2,6 +2,7 @@
 using LinkedIt.Core.DTOs.AppUsers;
 using LinkedIt.Core.DTOs.Authentication;
 using LinkedIt.Services.ControllerServices.IControllerServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -48,6 +49,13 @@ namespace LinkedIt.API.Controllers
 				return StatusCode(500, response);
 
 			return BadRequest(response);
+		}
+
+		[HttpGet("JwtTester")]
+		[Authorize]
+		public IActionResult tokenTester()
+		{
+			return Ok("Hi ");
 		}
 
 	}
