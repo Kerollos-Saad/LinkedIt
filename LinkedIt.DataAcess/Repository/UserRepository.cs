@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using LinkedIt.Core.DTOs.AppUsers;
 using LinkedIt.Core.DTOs.Authentication;
 using LinkedIt.Core.DTOs.User;
 using LinkedIt.Core.Models.User;
@@ -24,14 +25,12 @@ namespace LinkedIt.DataAcess.Repository
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly RoleManager<IdentityRole> _roleManager;
 
-		private readonly IConfiguration _configuration; // To Get API Key
-		private string securityKey;
-		private int tokenDuration;
+		private readonly IConfiguration _configuration; // To Get API Key [ Not Need It Until Now ]
 
 		// Authentication
 		private readonly IMapper _mapper;
 
-		public UserRepository(ApplicationDbContext db, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, 
+		public UserRepository(ApplicationDbContext db, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager,
 			IConfiguration configuration, IMapper mapper) : base(db)
 		{
 			this._db = db;
@@ -40,11 +39,6 @@ namespace LinkedIt.DataAcess.Repository
 			this._configuration = configuration;
 			this._mapper = mapper;
 
-			//Need To install Package `Microsoft.Extensions.Configuration.Binder` and the method `GetValue` will be available
-			securityKey = _configuration.GetValue<string>("JWTSettings:Key") ??
-			              throw new InvalidOperationException("JWTSettings:Key is not configured.");
-			tokenDuration = _configuration.GetValue<int?>("JWTSettings:DurationInMinutes") ??
-			                throw new InvalidOperationException("JWTSettings:Key is not configured.");
 		}
 
 		public async Task<bool> IsUniqueUserName(string userName)
@@ -71,42 +65,20 @@ namespace LinkedIt.DataAcess.Repository
 			return result > 0;
 		}
 
-		public async Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO)
+		public async Task<UserWithRolesDTO?> GetUserWithRoles(String userName, String password)
 		{
-			var user = await _userManager.FindByNameAsync(loginRequestDTO.UserName);
-			if (user == null || !await _userManager.CheckPasswordAsync(user, loginRequestDTO.Password))
+			var user = await _userManager.FindByNameAsync(userName);
+			if (user == null || !await _userManager.CheckPasswordAsync(user, password))
 			{
-				return new LoginResponseDTO()
-				{
-					Token = "",
-					User = null
-				};
+				return null;
 			}
 
 			var userRoles = await _userManager.GetRolesAsync(user);
 
-			var claims = new List<Claim>
+			return new UserWithRolesDTO()
 			{
-				new Claim(ClaimTypes.NameIdentifier, user.Id),
-				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-				new Claim(ClaimTypes.Name, user.UserName)
-			};
-
-			claims.AddRange(userRoles.Select(r => new Claim(ClaimTypes.Role, r)));
-
-			var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(securityKey));
-			var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-			var token = new JwtSecurityToken(
-				claims: claims,
-				expires: DateTime.UtcNow.AddMinutes(tokenDuration),
-				signingCredentials: credentials
-			);
-
-			return new LoginResponseDTO()
-			{
-				Token = new JwtSecurityTokenHandler().WriteToken(token),
-				User = _mapper.Map<UserDTO>(user)
+				User = user,
+				Roles = userRoles
 			};
 		}
 

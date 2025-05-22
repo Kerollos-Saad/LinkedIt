@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 using AutoMapper;
 using LinkedIt.Core.DTOs.AppUsers;
 using LinkedIt.Core.DTOs.Authentication;
+using LinkedIt.Core.DTOs.User;
 using LinkedIt.Core.Models.User;
 using LinkedIt.Core.Response;
 using LinkedIt.DataAcess.Repository.IRepository;
 using LinkedIt.Services.ControllerServices.IControllerServices;
+using LinkedIt.Services.JWTService.IJWTService;
 using Microsoft.AspNetCore.Identity;
 
 namespace LinkedIt.Services.ControllerServices
@@ -19,28 +21,44 @@ namespace LinkedIt.Services.ControllerServices
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IMapper _mapper;
+		private readonly IJwtTokenService _jwtTokenService;
 		private readonly UserManager<ApplicationUser> _userManager;
 
 		private APIResponse response;
 
-		public AuthService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager)
+		public AuthService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager, IJwtTokenService jwtTokenService)
 		{
 			this._unitOfWork = unitOfWork;
 			this._mapper = mapper;
 			this._userManager = userManager;
+			this._jwtTokenService = jwtTokenService;
 			response = new APIResponse();
 		}
 
 		public async Task<APIResponse> LoginAsync(LoginRequestDTO loginRequestDTO)
 		{
-			var responseLogin = await _unitOfWork.User.Login(loginRequestDTO);
-			if (responseLogin == null || string.IsNullOrEmpty(responseLogin.Token))
+			var userWithRoles = await _unitOfWork.User.GetUserWithRoles(loginRequestDTO.UserName, loginRequestDTO.Password);
+
+			if (userWithRoles == null)
 			{
 				response.SetResponseInfo(HttpStatusCode.BadRequest,
 					new List<string> { "Username or password is incorrect" }, null, false);
 				return response;
 			}
-			response.SetResponseInfo(HttpStatusCode.OK, null, responseLogin, true);
+
+			// Generate JWT Token Here
+
+			var token = _jwtTokenService.GenerateToken(userWithRoles.User, userWithRoles.Roles);
+
+			response.SetResponseInfo(
+				HttpStatusCode.OK,
+				null,
+				result: new LoginResponseDTO
+				{
+					Token = token,
+					User = _mapper.Map<UserDTO>(userWithRoles.User)
+				},
+				true);
 			return response;
 		}
 

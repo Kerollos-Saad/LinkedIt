@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LinkedIt.Core.DTOs.AppUsers;
 using LinkedIt.Core.Models.User;
 using LinkedIt.Core.DTOs.Authentication;
 using LinkedIt.Core.DTOs.User;
@@ -16,7 +17,7 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 		Task<bool> UpdateAsync(ApplicationUser user);
 
 		// Authentication
-		Task<LoginResponseDTO> Login(LoginRequestDTO  loginRequestDTO);
+		Task<UserWithRolesDTO> GetUserWithRoles(String userName, String password);
 		Task<UserDTO> Register(RegisterRequestDTO registerRequestDTO);
 		
 
