@@ -22,6 +22,9 @@ namespace LinkedIt.API.Controllers
 		[HttpPost("login")]
 		public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequestDto)
 		{
+			if (!ModelState.IsValid)
+				return BadRequest(ModelState);
+
 			var response = await _authService.LoginAsync(loginRequestDto);
 
 			if (response.IsSuccess)
@@ -33,6 +36,9 @@ namespace LinkedIt.API.Controllers
 		[HttpPost("register")]
 		public async Task<IActionResult> Register([FromBody] ApplicationUserToAddUserDTO registerRequestDto)
 		{
+			if(!ModelState.IsValid)
+				return BadRequest(ModelState);
+
 			var response = await _authService.RegisterAsync(registerRequestDto);
 
 			if (response.IsSuccess)
