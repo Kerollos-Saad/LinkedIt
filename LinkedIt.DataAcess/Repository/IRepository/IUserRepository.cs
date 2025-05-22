@@ -20,6 +20,5 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 		Task<UserWithRolesDTO> GetUserWithRoles(String userName, String password);
 		Task<UserDTO> Register(RegisterRequestDTO registerRequestDTO);
 		
-
 	}
 }
