@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Scalar.AspNetCore;
 
 namespace LinkedIt.API
 {
@@ -89,13 +90,21 @@ namespace LinkedIt.API
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
-            {
-                // Enable Swagger
-                app.UseSwagger();
-                app.UseSwaggerUI();
+			{
+				app.MapOpenApi();
+
+				// Enable Swagger
+				app.UseSwagger();
+				app.UseSwaggerUI();
+				// Enable Scalar
+				app.MapScalarApiReference(options =>
+				{
+					options.WithTheme(ScalarTheme.Mars);
+				});
 			}
 
 			// app.UseAuthentication(); By default Work By "Cookie" ==> To Work With JWT ==> AddAuthentication(options)
+			app.UseAuthentication();
 			app.UseAuthorization();
 
             app.MapControllers();
