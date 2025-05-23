@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 
 namespace LinkedIt.API
@@ -51,12 +52,42 @@ namespace LinkedIt.API
 			// Add OpenAPI with Bearer Authentication Support
 			#region JWT
 
-			//builder.Services.AddOpenApi("v1", options =>
-			//{
-			//	options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
-			//});
 
-			// Configure JWT Authentication insted of cookies
+			// Add Jwt Token in Scalar
+			builder.Services.AddOpenApi("v1", options =>
+			{
+				options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+			});
+
+			// Add Jwt Token in Swagger
+			builder.Services.AddSwaggerGen(option =>
+			{
+				option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+				{
+					In = ParameterLocation.Header,
+					Description = "Please enter a valid token",
+					Name = "Authorization",
+					Type = SecuritySchemeType.Http,
+					BearerFormat = "JWT",
+					Scheme = "Bearer"
+				});
+				option.AddSecurityRequirement(new OpenApiSecurityRequirement
+				{
+					{
+						new OpenApiSecurityScheme
+						{
+							Reference = new OpenApiReference
+							{
+								Type=ReferenceType.SecurityScheme,
+								Id="Bearer"
+							}
+						},
+						new string[]{}
+					}
+				});
+			});
+
+			// Configure JWT Authentication instead of cookies
 			var key = Encoding.ASCII.GetBytes(builder.Configuration["JWTSettings:Key"]);
 			builder.Services.AddAuthentication(options =>
 			{
@@ -83,8 +114,8 @@ namespace LinkedIt.API
 			builder.Services.AddControllers();
 
             // Register Swagger services
-            builder.Services.AddEndpointsApiExplorer(); // Required
-            builder.Services.AddSwaggerGen();           // Required
+            builder.Services.AddEndpointsApiExplorer();   // Required
+            //builder.Services.AddSwaggerGen();           // Required User Custom One With Bearer Jwt
 
 			var app = builder.Build();
 
@@ -96,6 +127,7 @@ namespace LinkedIt.API
 				// Enable Swagger
 				app.UseSwagger();
 				app.UseSwaggerUI();
+
 				// Enable Scalar
 				app.MapScalarApiReference(options =>
 				{
