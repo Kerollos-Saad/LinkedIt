@@ -115,7 +115,7 @@ namespace LinkedIt.API
 
             // Register Swagger services
             builder.Services.AddEndpointsApiExplorer();   // Required
-            //builder.Services.AddSwaggerGen();           // Required User Custom One With Bearer Jwt
+            //builder.Services.AddSwaggerGen();           // Required Use Custom One With Bearer Jwt
 
 			var app = builder.Build();
 
