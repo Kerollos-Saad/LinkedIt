@@ -22,5 +22,12 @@ namespace LinkedIt.Core.Response
 			ErrorMessages = errorMessages ?? new List<string>();
 			Result = result;
 		}
+
+		public static APIResponse Success(object? result = null, HttpStatusCode code = HttpStatusCode.OK) =>
+			new APIResponse { StatusCode = code, IsSuccess = true, Result = result };
+
+		public static APIResponse Fail(List<string> errors, HttpStatusCode code = HttpStatusCode.BadRequest) =>
+			new APIResponse { StatusCode = code, IsSuccess = false, ErrorMessages = errors };
+
 	}
 }
