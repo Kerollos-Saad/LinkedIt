@@ -16,6 +16,7 @@ namespace LinkedIt.Core.Mapper
 		{
 			CreateMap<ApplicationUser, UserDTO>().ReverseMap(); // BothWays
 			CreateMap<ApplicationUser, ApplicationUserToAddUserDTO>().ReverseMap(); // BothWays
+			CreateMap<ApplicationUser, ApplicationUserDTO>().ReverseMap(); // BothWays
 
 		}
 	}

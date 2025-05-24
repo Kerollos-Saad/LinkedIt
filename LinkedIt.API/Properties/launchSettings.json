@@ -16,7 +16,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "launchUrl": "swagger"
+      "launchUrl": "scalar"
     }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json",

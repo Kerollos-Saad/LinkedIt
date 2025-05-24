@@ -1,0 +1,55 @@
+﻿using System.Net;
+using System.Security.Claims;
+using AutoMapper;
+using LinkedIt.Core.Enums;
+using LinkedIt.Core.Response;
+using LinkedIt.DataAcess.Repository.IRepository;
+using LinkedIt.Services.ControllerServices.IControllerServices;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace LinkedIt.API.Controllers
+{
+	[Route("api/[controller]")]
+	[ApiController]
+	public class UserController : ControllerBase
+	{
+		private readonly IUserService _userService;
+
+		public UserController(IUserService userService)
+		{
+			this._userService = userService;
+		}
+
+		[HttpGet("myProfile")]
+		public async Task<IActionResult> GetMyProfile()
+		{
+			var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			var response = await _userService.GetUserProfileAsync(x => x.Id == id, UserProfileQueryType.ById);
+
+			if (response.StatusCode == HttpStatusCode.Unauthorized)
+				return Unauthorized(response);
+
+			if (response.StatusCode == HttpStatusCode.NotFound)
+				return NotFound(response);
+
+			return Ok(response);
+		}
+
+		[HttpGet("userProfile")]
+		public async Task<IActionResult> GetUserProfile(string userName)
+		{
+			var response = await _userService.GetUserProfileAsync(x => x.UserName == userName, UserProfileQueryType.ByUsername);
+
+			if (response.StatusCode == HttpStatusCode.Unauthorized)
+				return Unauthorized(response);
+
+			if (response.StatusCode == HttpStatusCode.NotFound)
+				return NotFound(response);
+
+			return Ok(response);
+		}
+
+	}
+}

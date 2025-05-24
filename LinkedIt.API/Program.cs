@@ -49,6 +49,8 @@ namespace LinkedIt.API
 			builder.Services.AddScoped<IAuthService, AuthService>();
 			builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
+			builder.Services.AddScoped<IUserService, UserService>();
+
 			// Add OpenAPI with Bearer Authentication Support
 			#region JWT
 
