@@ -17,23 +17,21 @@ namespace LinkedIt.Services.ControllerServices
 {
 	public class UserService : IUserService
 	{
-
 		private readonly IUnitOfWork _db;
 		private readonly IMapper _mapper;
-
-		private readonly APIResponse _response;
 
 		public UserService(IUnitOfWork db, IMapper mapper)
 		{
 			this._db = db;
 			this._mapper = mapper;
-			_response = new APIResponse();
 		}
 
 		public async Task<APIResponse> GetUserProfileAsync(Expression<Func<ApplicationUser, bool>> filter,
 			UserProfileQueryType queryType,
 			string[]? includeProperties = null)
 		{
+			APIResponse response = new APIResponse();
+
 			var userProfile = await _db.User.FindAsync(filter, includeProperties);
 
 			if (userProfile == null)
@@ -41,19 +39,19 @@ namespace LinkedIt.Services.ControllerServices
 				switch (queryType)
 				{
 					case UserProfileQueryType.ById:
-						_response.SetResponseInfo(HttpStatusCode.Unauthorized, new List<string> { "Unauthorized" }, null, false);
+						response.SetResponseInfo(HttpStatusCode.Unauthorized, new List<string> { "Unauthorized" }, null, false);
 						break;
 					case UserProfileQueryType.ByUsername:
-						_response.SetResponseInfo(HttpStatusCode.NotFound, new List<string> { "No user found with this username." }, null, false);
+						response.SetResponseInfo(HttpStatusCode.NotFound, new List<string> { "No user found with this username." }, null, false);
 						break;
 				}
-				return _response;
+				return response;
 			}
 
 			ApplicationUserDTO userProfileDto = _mapper.Map<ApplicationUserDTO>(userProfile);
 
-			_response.SetResponseInfo(HttpStatusCode.Found, null, userProfileDto, true);
-			return _response;
+			response.SetResponseInfo(HttpStatusCode.Found, null, userProfileDto, true);
+			return response;
 		}
 	}
 }
