@@ -1,17 +1,21 @@
 ﻿using System.Net;
 using System.Security.Claims;
 using AutoMapper;
+using LinkedIt.Core.DTOs.AppUsers;
 using LinkedIt.Core.Enums;
 using LinkedIt.Core.Response;
 using LinkedIt.DataAcess.Repository.IRepository;
 using LinkedIt.Services.ControllerServices.IControllerServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace LinkedIt.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+	[Authorize]
 	public class UserController : ControllerBase
 	{
 		private readonly IUserService _userService;
