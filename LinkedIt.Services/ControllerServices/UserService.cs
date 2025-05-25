@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using LinkedIt.Core.DTOs.AppUsers;
+using LinkedIt.Core.DTOs.User;
 using LinkedIt.Core.Enums;
 using LinkedIt.Core.Models.User;
 using LinkedIt.Core.Response;
@@ -51,6 +52,37 @@ namespace LinkedIt.Services.ControllerServices
 			ApplicationUserDTO userProfileDto = _mapper.Map<ApplicationUserDTO>(userProfile);
 
 			response.SetResponseInfo(HttpStatusCode.Found, null, userProfileDto, true);
+			return response;
+		}
+
+		public async Task<APIResponse> UpdateUserProfileAsync(string? userId, UpdateUserDTO userDto)
+		{
+			APIResponse response = new APIResponse();
+
+			var userFromDb = await _db.User.FindAsync(x => x.Id == userId);
+
+			if (userFromDb == null)
+			{
+				response.SetResponseInfo(HttpStatusCode.Unauthorized, new List<string> { "Unauthorized" }, null, false);
+				return response;
+			}
+
+			// User Will Change The UserName (Identifier)
+			if (userFromDb.UserName != userDto.UserName)
+			{
+				bool isUnique = await _db.User.IsUniqueUserName(userDto.UserName);
+
+				if (!isUnique) return APIResponse.Fail(new List<string> { "User Name Was Taken!." });
+			}
+
+			// Update 
+			bool success = await _db.User.UpdateAsync(userId, userDto);
+
+			if (!success)
+				return APIResponse.Fail(new List<string> { "Failed To Update User Profile!." });
+			
+			// Always will be the last version of the user Name
+			response.SetResponseInfo(HttpStatusCode.Accepted, null, userDto.UserName, true);
 			return response;
 		}
 	}

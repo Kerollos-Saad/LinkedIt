@@ -14,7 +14,7 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 	{
 		Task<bool> IsUniqueUserName(string userName);
 		Task<ApplicationUser> GetUserById(string userId);
-		Task<bool> UpdateAsync(ApplicationUser user);
+		Task<bool> UpdateAsync(String userId, UpdateUserDTO userDto);
 
 		// Authentication
 		Task<UserWithRolesDTO> GetUserWithRoles(String userName, String password);

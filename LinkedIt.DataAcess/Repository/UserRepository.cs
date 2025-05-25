@@ -13,6 +13,7 @@ using LinkedIt.Core.Models.User;
 using LinkedIt.DataAcess.Context;
 using LinkedIt.DataAcess.Repository.IRepository;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -43,7 +44,9 @@ namespace LinkedIt.DataAcess.Repository
 
 		public async Task<bool> IsUniqueUserName(string userName)
 		{
-			var user = await _db.ApplicationUsers.FindAsync(userName);
+			var user = await _db.ApplicationUsers
+				.AsNoTracking()
+				.FirstOrDefaultAsync(u => u.UserName == userName);
 			return user == null;
 		}
 
@@ -53,13 +56,18 @@ namespace LinkedIt.DataAcess.Repository
 			return user ?? throw new InvalidOperationException("User not found.");
 		}
 
-		public async Task<bool> UpdateAsync(ApplicationUser user)
+		public async Task<bool> UpdateAsync(String userId, UpdateUserDTO userDto)
 		{
-			var existingUser = await _db.ApplicationUsers.FindAsync(user.Id);
+			var existingUser = await _db.ApplicationUsers.FindAsync(userId);
 
 			if(existingUser == null) return false;
 
-			// Updating Data
+			// Updating Data ==> map from userDto → existingUser
+			_mapper.Map(userDto, existingUser); // Only maps non-null fields from src to dest Cause it's configured at that way
+
+			// Manually handle BirthDate only if it's not null
+			if (userDto.BirthDate.HasValue)
+				existingUser.BirthDate = userDto.BirthDate.Value;
 
 			var result = await _db.SaveChangesAsync();
 			return result > 0;

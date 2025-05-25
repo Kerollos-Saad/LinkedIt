@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using AutoMapper;
 using LinkedIt.Core.DTOs.AppUsers;
+using LinkedIt.Core.DTOs.User;
 using LinkedIt.Core.Enums;
 using LinkedIt.Core.Response;
 using LinkedIt.DataAcess.Repository.IRepository;
@@ -55,5 +56,24 @@ namespace LinkedIt.API.Controllers
 			return Ok(response);
 		}
 
+		[HttpPost("Update")]
+		public async Task<IActionResult> UpdateUserProfile(UpdateUserDTO userDto)
+		{
+			if (!ModelState.IsValid)
+				return BadRequest(ModelState);
+
+			var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			var response = await _userService.UpdateUserProfileAsync(id, userDto);
+
+			if (response.StatusCode == HttpStatusCode.Unauthorized)
+				return Unauthorized(response);
+
+			if (response.StatusCode == HttpStatusCode.BadRequest)
+				return BadRequest(response);
+
+			return Accepted(response);
+
+		}
 	}
 }
