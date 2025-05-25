@@ -56,7 +56,7 @@ namespace LinkedIt.API.Controllers
 			return Ok(response);
 		}
 
-		[HttpPost("Update")]
+		[HttpPut("Update")]
 		public async Task<IActionResult> UpdateUserProfile(UpdateUserDTO userDto)
 		{
 			if (!ModelState.IsValid)
