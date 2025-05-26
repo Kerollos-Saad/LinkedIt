@@ -10,5 +10,7 @@ namespace LinkedIt.Services.ControllerServices.IControllerServices
 	public interface ILinkService
 	{
 		Task<APIResponse> LinkUser(String? linkerId, String? userName);
+
+		Task<APIResponse> UnLinkUser(String? linkerId, String? userName);
 	}
 }

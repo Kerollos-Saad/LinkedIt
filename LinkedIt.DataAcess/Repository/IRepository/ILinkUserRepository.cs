@@ -11,5 +11,6 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 		Task<bool?> IsAlreadyLinking(String linkerId, String linkedId);
 
 		Task<bool> LinkUser(String linkerId, String linkedId);
+		Task<bool> UnLinkUser(String linkerId, String linkedId);
 	}
 }

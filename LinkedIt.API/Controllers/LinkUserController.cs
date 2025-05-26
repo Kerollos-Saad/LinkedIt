@@ -33,5 +33,21 @@ namespace LinkedIt.API.Controllers
 
 			return Accepted(response);
 		}
+
+		[HttpPost("UnLinkUser")]
+		public async Task<IActionResult> UnLinkUser(String userName)
+		{
+			var linkerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			var response = await _linkService.UnLinkUser(linkerId, userName);
+
+			if (response.StatusCode == HttpStatusCode.Unauthorized)
+				return Unauthorized(response);
+
+			if (response.StatusCode == HttpStatusCode.BadRequest)
+				return BadRequest(response);
+
+			return Accepted(response);
+		}
 	}
 }

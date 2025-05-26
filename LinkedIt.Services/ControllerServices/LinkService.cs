@@ -35,7 +35,7 @@ namespace LinkedIt.Services.ControllerServices
 				return APIResponse.Fail(new List<string> { "Invalid UserName" });
 
 			if(linkerId == userToLink.Id)
-				return APIResponse.Fail(new List<string> { "Really!?. Can't Follow Yourself bro !!." });
+				return APIResponse.Fail(new List<string> { "Really!?. Can't Link With Yourself bro !!." });
 
 			var isAlreadyLinking = await _db.LinkUser.IsAlreadyLinking(linkerId, userToLink.Id);
 
@@ -51,10 +51,46 @@ namespace LinkedIt.Services.ControllerServices
 			{
 				Linker = linkerId,
 				Linking = userToLink.Id,
-				msg = "Follow Added Successfully"
+				msg = "Link Added Successfully"
 			};
 
 			response.SetResponseInfo(HttpStatusCode.OK, null, linkAdd, true);
+			return response;
+		}
+
+		public async Task<APIResponse> UnLinkUser(string? linkerId, string? userName)
+		{
+			var response = new APIResponse();
+
+			if (linkerId == null)
+				return APIResponse.Fail(new List<string> { "Unauthorized" }, HttpStatusCode.Unauthorized);
+
+			var userToLink = await _db.User.FindAsync(u => u.UserName == userName);
+
+			if (userToLink == null)
+				return APIResponse.Fail(new List<string> { "Invalid UserName" });
+
+			if (linkerId == userToLink.Id)
+				return APIResponse.Fail(new List<string> { "Really!?. Can't UnLink With Yourself bro !!." });
+
+			var isAlreadyLinking = await _db.LinkUser.IsAlreadyLinking(linkerId, userToLink.Id);
+
+			if (isAlreadyLinking == false)
+				return APIResponse.Fail(new List<string> { "You are already unLinking with this user." });
+
+			var success = await _db.LinkUser.UnLinkUser(linkerId, userToLink.Id);
+
+			if (!success)
+				return APIResponse.Fail(new List<string> { "Failed to UnLink with this user." });
+
+			var linkRemove = new
+			{
+				UnLinker = linkerId,
+				UnLinking = userToLink.Id,
+				msg = "Link Removed Successfully"
+			};
+
+			response.SetResponseInfo(HttpStatusCode.OK, null, linkRemove, true);
 			return response;
 		}
 	}

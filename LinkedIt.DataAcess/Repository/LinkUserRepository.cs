@@ -39,5 +39,20 @@ namespace LinkedIt.DataAcess.Repository
 
 			return result > 0;
 		}
+
+		public async Task<bool> UnLinkUser(string linkerId, string linkedId)
+		{
+			var userLink =
+				await _db.UserLinks.FirstOrDefaultAsync(
+					uf => uf.LinkerUserId == linkerId && uf.LinkedUserId == linkedId);
+
+			if (userLink == null)
+				return false;
+			
+			_db.UserLinks.Remove(userLink);
+			var result = await _db.SaveChangesAsync();
+
+			return result > 0;
+		}
 	}
 }
