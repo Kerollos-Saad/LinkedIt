@@ -15,11 +15,11 @@ namespace LinkedIt.Core.Models.User
 
 		[ForeignKey("Linker")]
 		public required string LinkerUserId { get; set; }
-		public required ApplicationUser Linker { get; set; }
+		public ApplicationUser Linker { get; set; }
 
 
 		[ForeignKey("Linked")]
 		public required string LinkedUserId { get; set; }
-		public required ApplicationUser Linked { get; set; }
+		public ApplicationUser Linked { get; set; }
 	}
 }

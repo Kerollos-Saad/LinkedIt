@@ -23,6 +23,7 @@ namespace LinkedIt.DataAcess.Repository
 		private readonly RoleManager<IdentityRole> _roleManager;
 
 		public IUserRepository User { get; private set; }
+		public ILinkUserRepository LinkUser { get; private set; }
 
 		public UnitOfWork(ApplicationDbContext db, IMapper mapper, IConfiguration config,
 			UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
@@ -32,8 +33,9 @@ namespace LinkedIt.DataAcess.Repository
 			this._config = config;
 			this._userManager = userManager;
 			this._roleManager = roleManager;
-
+			
 			User = new UserRepository(db, userManager, roleManager, config, mapper);
+			LinkUser = new LinkUserRepository(db);
 		}
 
 		public async Task<bool> SaveAsync()

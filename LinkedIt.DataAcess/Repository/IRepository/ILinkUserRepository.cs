@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace LinkedIt.DataAcess.Repository.IRepository
 {
-	public interface IUnitOfWork
+	public interface ILinkUserRepository
 	{
-		IUserRepository User { get; }
-		ILinkUserRepository LinkUser { get; }
+		Task<bool?> IsAlreadyLinking(String linkerId, String linkedId);
 
-		Task<bool> SaveAsync();
+		Task<bool> LinkUser(String linkerId, String linkedId);
 	}
 }
