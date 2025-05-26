@@ -10,6 +10,6 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 	{
 		IUserRepository User { get; }
 
-		Task SaveAsync();
+		Task<bool> SaveAsync();
 	}
 }

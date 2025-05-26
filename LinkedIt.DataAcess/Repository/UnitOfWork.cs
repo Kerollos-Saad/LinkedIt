@@ -36,9 +36,10 @@ namespace LinkedIt.DataAcess.Repository
 			User = new UserRepository(db, userManager, roleManager, config, mapper);
 		}
 
-		public async Task SaveAsync()
+		public async Task<bool> SaveAsync()
 		{
-			await _db.SaveChangesAsync();
+			var success = await _db.SaveChangesAsync();
+			return success > 0;
 		}
 	}
 }

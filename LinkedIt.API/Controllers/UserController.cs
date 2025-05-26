@@ -26,7 +26,21 @@ namespace LinkedIt.API.Controllers
 			this._userService = userService;
 		}
 
-		[HttpGet("myProfile")]
+		[HttpGet("userProfile")]
+		public async Task<IActionResult> GetUserProfile(string userName)
+		{
+			var response = await _userService.GetUserProfileAsync(x => x.UserName == userName, UserProfileQueryType.ByUsername);
+
+			if (response.StatusCode == HttpStatusCode.Unauthorized)
+				return Unauthorized(response);
+
+			if (response.StatusCode == HttpStatusCode.NotFound)
+				return NotFound(response);
+
+			return Ok(response);
+		}
+
+		[HttpGet()]
 		public async Task<IActionResult> GetMyProfile()
 		{
 			var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -42,21 +56,8 @@ namespace LinkedIt.API.Controllers
 			return Ok(response);
 		}
 
-		[HttpGet("userProfile")]
-		public async Task<IActionResult> GetUserProfile(string userName)
-		{
-			var response = await _userService.GetUserProfileAsync(x => x.UserName == userName, UserProfileQueryType.ByUsername);
-
-			if (response.StatusCode == HttpStatusCode.Unauthorized)
-				return Unauthorized(response);
-
-			if (response.StatusCode == HttpStatusCode.NotFound)
-				return NotFound(response);
-
-			return Ok(response);
-		}
-
-		[HttpPut("Update")]
+		// Work With User Id cause only User Can Update Or Remove His Profile
+		[HttpPut()]
 		public async Task<IActionResult> UpdateUserProfile(UpdateUserDTO userDto)
 		{
 			if (!ModelState.IsValid)
@@ -74,6 +75,22 @@ namespace LinkedIt.API.Controllers
 
 			return Accepted(response);
 
+		}
+
+		[HttpDelete()]
+		public async Task<IActionResult> DeleteUser()
+		{
+			var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			var response = await _userService.DeleteUserProfile(id);
+
+			if (response.StatusCode == HttpStatusCode.Unauthorized)
+				return Unauthorized(response);
+
+			if (response.StatusCode == HttpStatusCode.BadRequest)
+				return BadRequest(response);
+
+			return Accepted(response);
 		}
 	}
 }

@@ -79,10 +79,33 @@ namespace LinkedIt.Services.ControllerServices
 			bool success = await _db.User.UpdateAsync(userId, userDto);
 
 			if (!success)
-				return APIResponse.Fail(new List<string> { "Failed To Update User Profile!." });
+				return APIResponse.Fail(new List<string> { $"Failed To Update User Profile {userFromDb.UserName} !." });
 			
 			// Always will be the last version of the user Name
-			response.SetResponseInfo(HttpStatusCode.Accepted, null, userDto.UserName, true);
+			response.SetResponseInfo(HttpStatusCode.Accepted, null, userFromDb.UserName, true);
+			return response;
+		}
+
+		public async Task<APIResponse> DeleteUserProfile(string? userId)
+		{
+			APIResponse response = new APIResponse();
+
+			var userFromDb = await _db.User.FindAsync(x => x.Id == userId);
+
+			if (userFromDb == null)
+			{
+				response.SetResponseInfo(HttpStatusCode.Unauthorized, new List<string> { "Unauthorized" }, null, false);
+				return response;
+			}
+
+			// Remove 
+			await _db.User.RemoveAsync(userFromDb);
+			var success = await _db.SaveAsync();
+
+			if (!success)
+				return APIResponse.Fail(new List<string> { $"Failed To Delete User Profile {userFromDb.UserName} !." });
+
+			response.SetResponseInfo(HttpStatusCode.Accepted, new List<string>(), userFromDb.UserName, true);
 			return response;
 		}
 	}

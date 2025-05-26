@@ -40,6 +40,12 @@ namespace LinkedIt.DataAcess.Repository
 			return entity;
 		}
 
+		public async Task<T> RemoveAsync(T entity)
+		{
+			_db.Set<T>().Remove(entity);
+			return entity;
+		}
+
 		public IEnumerable<T> AddRange(IEnumerable<T> entities)
 		{
 			IEnumerable<T> range = entities.ToList();
