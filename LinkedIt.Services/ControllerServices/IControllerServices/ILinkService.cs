@@ -12,5 +12,7 @@ namespace LinkedIt.Services.ControllerServices.IControllerServices
 		Task<APIResponse> LinkUser(String? linkerId, String? userName);
 
 		Task<APIResponse> UnLinkUser(String? linkerId, String? userName);
+
+		Task<APIResponse> IsLinkingWith(String? linkerId, String? userName);
 	}
 }

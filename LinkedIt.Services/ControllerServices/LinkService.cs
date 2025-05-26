@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using LinkedIt.Core.Response;
+using LinkedIt.DataAcess.Repository;
 using LinkedIt.DataAcess.Repository.IRepository;
 using LinkedIt.Services.ControllerServices.IControllerServices;
 
@@ -91,6 +92,34 @@ namespace LinkedIt.Services.ControllerServices
 			};
 
 			response.SetResponseInfo(HttpStatusCode.OK, null, linkRemove, true);
+			return response;
+		}
+
+		public async Task<APIResponse> IsLinkingWith(string? linkerId, string? userName)
+		{
+			var response = new APIResponse();
+
+			if (linkerId == null)
+				return APIResponse.Fail(new List<string> { "Unauthorized" }, HttpStatusCode.Unauthorized);
+
+			var userToLink = await _db.User.FindAsync(u => u.UserName == userName);
+
+			if (userToLink == null)
+				return APIResponse.Fail(new List<string> { "Invalid UserName" });
+
+			if (linkerId == userToLink.Id)
+				return APIResponse.Fail(new List<string> { "Really!?. How is it even possible to link with yourself !!." });
+
+			var isAlreadyLinking = await _db.LinkUser.IsAlreadyLinking(linkerId, userToLink.Id);
+
+			var followingStatus = new
+			{
+				UnLinker = linkerId,
+				UnLinking = userToLink.Id,
+				IsFollowing = isAlreadyLinking
+			};
+
+			response.SetResponseInfo(HttpStatusCode.OK, new List<string> { }, followingStatus, true);
 			return response;
 		}
 	}

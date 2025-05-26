@@ -49,5 +49,21 @@ namespace LinkedIt.API.Controllers
 
 			return Accepted(response);
 		}
+
+		[HttpGet("IsLinkingWith")]
+		public async Task<IActionResult> IsLinkingWith(String userName)
+		{
+			var linkerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			var response = await _linkService.IsLinkingWith(linkerId, userName);
+
+			if (response.StatusCode == HttpStatusCode.Unauthorized)
+				return Unauthorized(response);
+
+			if (response.StatusCode == HttpStatusCode.BadRequest)
+				return BadRequest(response);
+
+			return Accepted(response);
+		}
 	}
 }
