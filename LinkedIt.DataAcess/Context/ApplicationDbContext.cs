@@ -22,9 +22,6 @@ namespace LinkedIt.DataAcess.Context
 
 			builder.Entity<ApplicationUser>()
 				.ToTable("Users", "Security");
-			builder.Entity<UserFollow>()
-				.ToTable("UserFollow", "security");
-
 			builder.Entity<IdentityRole>()
 				.ToTable("Roles", "security");
 			builder.Entity<IdentityUserRole<String>>()
@@ -38,21 +35,23 @@ namespace LinkedIt.DataAcess.Context
 			builder.Entity<IdentityUserToken<String>>()
 				.ToTable("UserTokens", "security");
 
+			builder.Entity<UserLink>()
+				.ToTable("UserLink", "system");
 
-			builder.Entity<UserFollow>()
-				.HasOne(uf => uf.Follower)
-				.WithMany(u => u.Followings)
-				.HasForeignKey(uf => uf.FollowerUserId)
+			builder.Entity<UserLink>()
+				.HasOne(uf => uf.Linker)
+				.WithMany(u => u.Linkings)
+				.HasForeignKey(uf => uf.LinkerUserId)
 				.OnDelete(DeleteBehavior.Restrict);
 
-			builder.Entity<UserFollow>()
-				.HasOne(uf=>uf.Followed)
-				.WithMany(u=>u.Followers)
-				.HasForeignKey(uf=>uf.FollowedUserId)
+			builder.Entity<UserLink>()
+				.HasOne(uf=>uf.Linked)
+				.WithMany(u=>u.Linkers)
+				.HasForeignKey(uf=>uf.LinkedUserId)
 				.OnDelete(DeleteBehavior.Restrict);
 		}
 
 		public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-		public DbSet<UserFollow> UserFollows { get; set; }
+		public DbSet<UserLink> UserLinks { get; set; }
 	}
 }
