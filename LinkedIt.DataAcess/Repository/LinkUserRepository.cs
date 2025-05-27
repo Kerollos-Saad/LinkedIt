@@ -58,16 +58,16 @@ namespace LinkedIt.DataAcess.Repository
 
 		public async Task<IEnumerable<ApplicationUser>> GetMutualLinkersAsync(string userId, string targetUserId)
 		{
-			var userLinker = _db.UserLinks
-				.Where(uf => uf.LinkerUserId == userId)
-				.Select(uf => uf.LinkedUserId);
-			var targetUserLinker = _db.UserLinks
-				.Where(uf => uf.LinkerUserId == targetUserId)
-				.Select(uf=>uf.LinkedUserId);
-
-			var mutualLinkers = await _db.Users
-				.Where(u => userLinker.Contains(u.Id) && targetUserLinker.Contains(u.Id))
-				.ToListAsync();
+			var mutualLinkers = await (
+				from u in _db.Users
+				join ul1 in _db.UserLinks on u.Id equals ul1.LinkedUserId
+				join ul2 in _db.UserLinks on u.Id equals ul2.LinkedUserId
+				where
+					ul1.LinkerUserId == userId
+					&&
+					ul2.LinkerUserId == targetUserId
+				select u
+			).ToListAsync();
 
 			return mutualLinkers;
 		}
