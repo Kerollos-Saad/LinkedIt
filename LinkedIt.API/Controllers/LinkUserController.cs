@@ -138,5 +138,19 @@ namespace LinkedIt.API.Controllers
 				_ => Ok(response)
 			};
 		}
+
+		[HttpGet("Linker-LinkingCount")]
+		public async Task<IActionResult> GetLinker_LinkingCount()
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			var response = await _linkService.GetLinkers_LinkingsCountForUserAsync(userId);
+
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				_ => Ok(response)
+			};
+		}
 	}
 }

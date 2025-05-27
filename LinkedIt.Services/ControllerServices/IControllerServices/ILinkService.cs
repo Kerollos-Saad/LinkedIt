@@ -24,5 +24,7 @@ namespace LinkedIt.Services.ControllerServices.IControllerServices
 		Task<APIResponse> GetLinkersCountForUserAsync(String? userId);
 
 		Task<APIResponse> GetLinkingsCountForUserAsync(String? userId);
+
+		Task<APIResponse> GetLinkers_LinkingsCountForUserAsync(String? userId);
 	}
 }

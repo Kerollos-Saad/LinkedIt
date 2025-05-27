@@ -20,7 +20,9 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 		Task<List<LinkerDTO>> GetLinkersDtoAsync(String userId);
 		Task<List<LinkerDTO>> GetLinkingsDtoAsync(String userId);
 
-		Task<int> GetLinkersCount(String userId);
-		Task<int> GetLinkingsCount(String userId);
+		Task<int> GetLinkersCountAsync(String userId);
+		Task<int> GetLinkingsCountAsync(String userId);
+
+		Task<(int linkersCount, int linkingsCount)> GetLinkers_LinkingsCountAsync(String userId);
 	}
 }

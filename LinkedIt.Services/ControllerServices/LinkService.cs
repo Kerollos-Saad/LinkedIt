@@ -228,7 +228,7 @@ namespace LinkedIt.Services.ControllerServices
 			if (String.IsNullOrEmpty(userId))
 				return APIResponse.Fail(new List<string> { "Unauthorized" }, HttpStatusCode.Unauthorized);
 
-			var linkersCount = await _db.LinkUser.GetLinkersCount(userId);
+			var linkersCount = await _db.LinkUser.GetLinkersCountAsync(userId);
 
 			if (linkersCount == 0)
 			{
@@ -253,7 +253,7 @@ namespace LinkedIt.Services.ControllerServices
 			if (String.IsNullOrEmpty(userId))
 				return APIResponse.Fail(new List<string> { "Unauthorized" }, HttpStatusCode.Unauthorized);
 
-			var linkingsCount = await _db.LinkUser.GetLinkingsCount(userId);
+			var linkingsCount = await _db.LinkUser.GetLinkingsCountAsync(userId);
 
 			if (linkingsCount == 0)
 			{
@@ -266,6 +266,25 @@ namespace LinkedIt.Services.ControllerServices
 				{
 					UserId = userId,
 					LinkingsNumber = linkingsCount
+				},
+				true);
+			return response;
+		}
+
+		public async Task<APIResponse> GetLinkers_LinkingsCountForUserAsync(string? userId)
+		{
+			var response = new APIResponse();
+
+			if (String.IsNullOrEmpty(userId))
+				return APIResponse.Fail(new List<string> { "Unauthorized" }, HttpStatusCode.Unauthorized);
+
+			var linkerLinkingCount = await _db.LinkUser.GetLinkers_LinkingsCountAsync(userId);
+
+			response.SetResponseInfo(HttpStatusCode.OK, null, new
+				{
+					UserId = userId,
+					LinkersNumber = linkerLinkingCount.linkersCount,
+					LinkingsNumber = linkerLinkingCount.linkingsCount,
 				},
 				true);
 			return response;

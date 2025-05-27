@@ -102,7 +102,7 @@ namespace LinkedIt.DataAcess.Repository
 			return linkings;
 		}
 
-		public async Task<int> GetLinkersCount(string userId)
+		public async Task<int> GetLinkersCountAsync(string userId)
 		{
 			var count = await _db.UserLinks
 				.AsNoTracking()
@@ -111,13 +111,26 @@ namespace LinkedIt.DataAcess.Repository
 			return count;
 		}
 
-		public async Task<int> GetLinkingsCount(string userId)
+		public async Task<int> GetLinkingsCountAsync(string userId)
 		{
 			var count = await _db.UserLinks
 				.AsNoTracking()
 				.CountAsync(ul => ul.LinkerUserId == userId);
 
 			return count;
+		}
+
+		public async Task<(int linkersCount, int linkingsCount)> GetLinkers_LinkingsCountAsync(string userId)
+		{
+			var linkersCountTask = await _db.UserLinks
+				.AsNoTracking()
+				.CountAsync(ul => ul.LinkedUserId == userId);
+
+			var linkingsCountTask = await _db.UserLinks
+				.AsNoTracking()
+				.CountAsync(ul => ul.LinkerUserId == userId);
+
+			return (linkersCountTask, linkingsCountTask);
 		}
 	}
 }
