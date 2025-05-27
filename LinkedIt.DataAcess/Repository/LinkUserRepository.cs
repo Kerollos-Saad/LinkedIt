@@ -101,5 +101,23 @@ namespace LinkedIt.DataAcess.Repository
 
 			return linkings;
 		}
+
+		public async Task<int> GetLinkersCount(string userId)
+		{
+			var count = await _db.UserLinks
+				.AsNoTracking()
+				.CountAsync(ul => ul.LinkedUserId == userId);
+
+			return count;
+		}
+
+		public async Task<int> GetLinkingsCount(string userId)
+		{
+			var count = await _db.UserLinks
+				.AsNoTracking()
+				.CountAsync(ul => ul.LinkerUserId == userId);
+
+			return count;
+		}
 	}
 }

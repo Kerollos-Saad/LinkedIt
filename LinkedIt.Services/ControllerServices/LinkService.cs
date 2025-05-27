@@ -220,5 +220,55 @@ namespace LinkedIt.Services.ControllerServices
 			response.SetResponseInfo(HttpStatusCode.OK, new List<string> { }, linkingsResponse, true);
 			return response;
 		}
+
+		public async Task<APIResponse> GetLinkersCountForUserAsync(string? userId)
+		{
+			var response = new APIResponse();
+
+			if (String.IsNullOrEmpty(userId))
+				return APIResponse.Fail(new List<string> { "Unauthorized" }, HttpStatusCode.Unauthorized);
+
+			var linkersCount = await _db.LinkUser.GetLinkersCount(userId);
+
+			if (linkersCount == 0)
+			{
+				response.SetResponseInfo(HttpStatusCode.OK, new List<string>() { "There is no Linkers for you" }, null,
+					true);
+				return response;
+			}
+
+			response.SetResponseInfo(HttpStatusCode.OK, null, new
+				{
+					UserId = userId,
+					LinkersNumber = linkersCount,
+				},
+				true);
+			return response;
+		}
+
+		public async Task<APIResponse> GetLinkingsCountForUserAsync(string? userId)
+		{
+			var response = new APIResponse();
+
+			if (String.IsNullOrEmpty(userId))
+				return APIResponse.Fail(new List<string> { "Unauthorized" }, HttpStatusCode.Unauthorized);
+
+			var linkingsCount = await _db.LinkUser.GetLinkingsCount(userId);
+
+			if (linkingsCount == 0)
+			{
+				response.SetResponseInfo(HttpStatusCode.OK, new List<string>() { "You don't have Linkings with anyone" }, null,
+					true);
+				return response;
+			}
+
+			response.SetResponseInfo(HttpStatusCode.OK, null, new
+				{
+					UserId = userId,
+					LinkingsNumber = linkingsCount
+				},
+				true);
+			return response;
+		}
 	}
 }

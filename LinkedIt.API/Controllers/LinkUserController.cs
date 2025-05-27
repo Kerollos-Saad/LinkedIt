@@ -111,5 +111,32 @@ namespace LinkedIt.API.Controllers
 			};
 		}
 
+		[HttpGet("LinkersCount")]
+		public async Task<IActionResult> GetLinkersCount()
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			var response = await _linkService.GetLinkersCountForUserAsync(userId);
+
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				_ => Ok(response)
+			};
+		}
+
+		[HttpGet("LinkingsCount")]
+		public async Task<IActionResult> GetLinkingsCount()
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			var response = await _linkService.GetLinkingsCountForUserAsync(userId);
+
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				_ => Ok(response)
+			};
+		}
 	}
 }
