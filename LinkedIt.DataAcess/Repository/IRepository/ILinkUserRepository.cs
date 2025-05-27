@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LinkedIt.Core.DTOs.Linker;
 using LinkedIt.Core.Models.User;
 
 namespace LinkedIt.DataAcess.Repository.IRepository
@@ -16,6 +17,6 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 
 		Task<IEnumerable<ApplicationUser>> GetMutualLinkersAsync(String userId, String targetUserId);
 
-		Task<IEnumerable<ApplicationUser>> GetLinkersAsync(String userId);
+		Task<List<LinkerDTO>> GetLinkersDtoAsync(string userId);
 	}
 }

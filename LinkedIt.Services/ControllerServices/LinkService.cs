@@ -176,9 +176,7 @@ namespace LinkedIt.Services.ControllerServices
 			if (String.IsNullOrEmpty(userId))
 				return APIResponse.Fail(new List<string> { "Unauthorized" }, HttpStatusCode.Unauthorized);
 
-			var linkers = await _db.LinkUser.GetLinkersAsync(userId);
-
-			var linkersDto = _mapper.Map<List<LinkerDTO>>(linkers) ?? new List<LinkerDTO>();
+			var linkersDto = await _db.LinkUser.GetLinkersDtoAsync(userId);
 
 			if (linkersDto.Count == 0)
 			{
