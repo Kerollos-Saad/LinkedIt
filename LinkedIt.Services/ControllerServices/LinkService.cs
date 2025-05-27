@@ -152,8 +152,11 @@ namespace LinkedIt.Services.ControllerServices
 			var mutualLinkersDto = _mapper.Map<List<LinkerDTO>>(mutualLinkers) ?? new List<LinkerDTO>();
 
 			if (!mutualLinkersDto.Any())
+			{
 				response.SetResponseInfo(HttpStatusCode.OK, new List<string>() { "There is no Mutual Linkers" }, null,
 					true);
+				return response;
+			}
 
 			var mutualLinkersResponse = new
 			{
@@ -163,6 +166,34 @@ namespace LinkedIt.Services.ControllerServices
 			};
 
 			response.SetResponseInfo(HttpStatusCode.OK, new List<string> { }, mutualLinkersResponse, true);
+			return response;
+		}
+
+		public async Task<APIResponse> GetLinkersForUserAsync(string? userId)
+		{
+			var response = new APIResponse();
+
+			if (String.IsNullOrEmpty(userId))
+				return APIResponse.Fail(new List<string> { "Unauthorized" }, HttpStatusCode.Unauthorized);
+
+			var linkers = await _db.LinkUser.GetLinkersAsync(userId);
+
+			var linkersDto = _mapper.Map<List<LinkerDTO>>(linkers) ?? new List<LinkerDTO>();
+
+			if (linkersDto.Count == 0)
+			{
+				response.SetResponseInfo(HttpStatusCode.OK, new List<string>() { "There is no Linkers for you" }, null,
+					true);
+				return response;
+			}
+
+			var linkersResponse = new
+			{
+				UserId = userId,
+				Linkers = linkersDto
+			};
+
+			response.SetResponseInfo(HttpStatusCode.OK, new List<string> { }, linkersResponse, true);
 			return response;
 		}
 	}

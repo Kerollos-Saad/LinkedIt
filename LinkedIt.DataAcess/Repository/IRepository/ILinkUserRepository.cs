@@ -15,5 +15,7 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 		Task<bool> UnLinkUser(String linkerId, String linkedId);
 
 		Task<IEnumerable<ApplicationUser>> GetMutualLinkersAsync(String userId, String targetUserId);
+
+		Task<IEnumerable<ApplicationUser>> GetLinkersAsync(String userId);
 	}
 }

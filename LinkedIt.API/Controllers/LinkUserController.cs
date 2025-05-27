@@ -80,5 +80,20 @@ namespace LinkedIt.API.Controllers
 				_ => Ok(response)
 			};
 		}
+
+		[HttpGet("Linkers")]
+		public async Task<IActionResult> GetLinkers()
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			var response = await _linkService.GetLinkersForUserAsync(userId);
+
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				HttpStatusCode.BadRequest => BadRequest(response),
+				_ => Ok(response)
+			};
+		}
 	}
 }
