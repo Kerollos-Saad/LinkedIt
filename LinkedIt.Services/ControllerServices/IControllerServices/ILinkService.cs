@@ -14,5 +14,7 @@ namespace LinkedIt.Services.ControllerServices.IControllerServices
 		Task<APIResponse> UnLinkUser(String? linkerId, String? userName);
 
 		Task<APIResponse> IsLinkingWith(String? linkerId, String? userName);
+
+		Task<APIResponse> GetMutualLinkersForUserAsync(String? userId, String? targetUserName);
 	}
 }

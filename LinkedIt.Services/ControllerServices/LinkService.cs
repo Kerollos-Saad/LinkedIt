@@ -5,10 +5,13 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using LinkedIt.Core.DTOs.Linker;
+using LinkedIt.Core.Models.User;
 using LinkedIt.Core.Response;
 using LinkedIt.DataAcess.Repository;
 using LinkedIt.DataAcess.Repository.IRepository;
 using LinkedIt.Services.ControllerServices.IControllerServices;
+using Microsoft.IdentityModel.Tokens;
 
 namespace LinkedIt.Services.ControllerServices
 {
@@ -120,6 +123,46 @@ namespace LinkedIt.Services.ControllerServices
 			};
 
 			response.SetResponseInfo(HttpStatusCode.OK, new List<string> { }, followingStatus, true);
+			return response;
+		}
+
+		public async Task<APIResponse> GetMutualLinkersForUserAsync(string? userId, string? targetUserName)
+		{
+			var response = new APIResponse();
+
+			if (String.IsNullOrEmpty(userId))
+				return APIResponse.Fail(new List<string> { "Unauthorized" }, HttpStatusCode.Unauthorized);
+
+			var targetUser = await _db.User.FindAsync(u => u.UserName == targetUserName);
+
+			if (targetUser == null)
+				return APIResponse.Fail(new List<string> { "Invalid UserName" });
+
+			if (userId == targetUser.Id)
+				return APIResponse.Fail(new List<string> { "How is it even possible to Find Mutual Linkers with yourself Psycho !!." });
+
+			var userLinkTarget = await _db.LinkUser.IsAlreadyLinking(userId, targetUser.Id);
+			var targetLinkUser= await _db.LinkUser.IsAlreadyLinking(targetUser.Id, userId);
+
+			if (userLinkTarget == false || targetLinkUser == false)
+				return APIResponse.Fail(new List<string> { "Users are not connected mutually !!." });
+
+			var mutualLinkers = await _db.LinkUser.GetMutualLinkersAsync(userId, targetUser.Id);
+
+			var mutualLinkersDto = _mapper.Map<List<LinkerDTO>>(mutualLinkers) ?? new List<LinkerDTO>();
+
+			if (!mutualLinkersDto.Any())
+				response.SetResponseInfo(HttpStatusCode.OK, new List<string>() { "There is no Mutual Linkers" }, null,
+					true);
+
+			var mutualLinkersResponse = new
+			{
+				Linker = userId,
+				Linking = targetUser.Id,
+				MutualLinkers = mutualLinkersDto
+			};
+
+			response.SetResponseInfo(HttpStatusCode.OK, new List<string> { }, mutualLinkersResponse, true);
 			return response;
 		}
 	}

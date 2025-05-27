@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LinkedIt.Core.Models.User;
 
 namespace LinkedIt.DataAcess.Repository.IRepository
 {
@@ -12,5 +13,7 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 
 		Task<bool> LinkUser(String linkerId, String linkedId);
 		Task<bool> UnLinkUser(String linkerId, String linkedId);
+
+		Task<IEnumerable<ApplicationUser>> GetMutualLinkersAsync(String userId, String targetUserId);
 	}
 }

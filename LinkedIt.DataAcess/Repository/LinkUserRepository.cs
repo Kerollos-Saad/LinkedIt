@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LinkedIt.Core.DTOs.Linker;
 using LinkedIt.Core.Models.User;
 using LinkedIt.DataAcess.Context;
 using LinkedIt.DataAcess.Repository.IRepository;
@@ -53,6 +54,22 @@ namespace LinkedIt.DataAcess.Repository
 			var result = await _db.SaveChangesAsync();
 
 			return result > 0;
+		}
+
+		public async Task<IEnumerable<ApplicationUser>> GetMutualLinkersAsync(string userId, string targetUserId)
+		{
+			var userLinker = _db.UserLinks
+				.Where(uf => uf.LinkerUserId == userId)
+				.Select(uf => uf.LinkedUserId);
+			var targetUserLinker = _db.UserLinks
+				.Where(uf => uf.LinkerUserId == targetUserId)
+				.Select(uf=>uf.LinkedUserId);
+
+			var mutualLinkers = await _db.Users
+				.Where(u => userLinker.Contains(u.Id) && targetUserLinker.Contains(u.Id))
+				.ToListAsync();
+
+			return mutualLinkers;
 		}
 	}
 }

@@ -65,5 +65,20 @@ namespace LinkedIt.API.Controllers
 
 			return Accepted(response);
 		}
+
+		[HttpGet("{userName}/MutualLinkers")]
+		public async Task<IActionResult> GetMutualLinkers([FromRoute] String userName)
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			var response = await _linkService.GetMutualLinkersForUserAsync(userId, userName);
+
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				HttpStatusCode.BadRequest => BadRequest(response),
+				_ => Ok(response)
+			};
+		}
 	}
 }
