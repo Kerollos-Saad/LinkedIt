@@ -18,8 +18,8 @@ namespace LinkedIt.API.Controllers
 			this._linkService = linkService;
 		}
 
-		[HttpPost("LinkUser")]
-		public async Task<IActionResult> LinkUser(String userName)
+		[HttpPost("{userName}")]
+		public async Task<IActionResult> LinkUser([FromRoute]String userName)
 		{
 			var linkerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -34,8 +34,8 @@ namespace LinkedIt.API.Controllers
 			return Accepted(response);
 		}
 
-		[HttpPost("UnLinkUser")]
-		public async Task<IActionResult> UnLinkUser(String userName)
+		[HttpDelete("{userName}")]
+		public async Task<IActionResult> UnLinkUser([FromRoute]String userName)
 		{
 			var linkerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -50,8 +50,8 @@ namespace LinkedIt.API.Controllers
 			return Accepted(response);
 		}
 
-		[HttpGet("IsLinkingWith")]
-		public async Task<IActionResult> IsLinkingWith(String userName)
+		[HttpGet("{userName}/Status")]
+		public async Task<IActionResult> IsLinkingWith([FromRoute]String userName)
 		{
 			var linkerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
