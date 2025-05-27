@@ -85,5 +85,21 @@ namespace LinkedIt.DataAcess.Repository
 
 			return linkers;
 		}
+
+		public async Task<List<LinkerDTO>> GetLinkingsDtoAsync(string userId)
+		{
+			var linkings = await (
+				from u in _db.Users.AsNoTracking()
+				join ul in _db.UserLinks.AsNoTracking()
+					on u.Id equals ul.LinkedUserId
+				where ul.LinkerUserId == userId
+				select new LinkerDTO
+				{
+					UserId = u.Id,
+					UserName = u.UserName
+				}).ToListAsync();
+
+			return linkings;
+		}
 	}
 }

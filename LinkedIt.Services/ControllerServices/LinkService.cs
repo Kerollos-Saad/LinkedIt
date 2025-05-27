@@ -194,5 +194,31 @@ namespace LinkedIt.Services.ControllerServices
 			response.SetResponseInfo(HttpStatusCode.OK, new List<string> { }, linkersResponse, true);
 			return response;
 		}
+
+		public async Task<APIResponse> GetLinkingsForUserAsync(string? userId)
+		{
+			var response = new APIResponse();
+
+			if (String.IsNullOrEmpty(userId))
+				return APIResponse.Fail(new List<string> { "Unauthorized" }, HttpStatusCode.Unauthorized);
+
+			var linkingsDto = await _db.LinkUser.GetLinkingsDtoAsync(userId);
+
+			if (linkingsDto.Count == 0)
+			{
+				response.SetResponseInfo(HttpStatusCode.OK, new List<string>() { "You don't have Linkings with anyone" }, null,
+					true);
+				return response;
+			}
+
+			var linkingsResponse = new
+			{
+				UserId = userId,
+				Linkings = linkingsDto
+			};
+
+			response.SetResponseInfo(HttpStatusCode.OK, new List<string> { }, linkingsResponse, true);
+			return response;
+		}
 	}
 }

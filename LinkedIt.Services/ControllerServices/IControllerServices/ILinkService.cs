@@ -18,5 +18,7 @@ namespace LinkedIt.Services.ControllerServices.IControllerServices
 		Task<APIResponse> GetMutualLinkersForUserAsync(String? userId, String? targetUserName);
 
 		Task<APIResponse> GetLinkersForUserAsync(String? userId);
+
+		Task<APIResponse> GetLinkingsForUserAsync(String? userId);
 	}
 }

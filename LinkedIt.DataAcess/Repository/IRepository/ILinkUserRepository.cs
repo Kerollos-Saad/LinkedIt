@@ -18,5 +18,6 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 		Task<IEnumerable<ApplicationUser>> GetMutualLinkersAsync(String userId, String targetUserId);
 
 		Task<List<LinkerDTO>> GetLinkersDtoAsync(string userId);
+		Task<List<LinkerDTO>> GetLinkingsDtoAsync(string userId);
 	}
 }
