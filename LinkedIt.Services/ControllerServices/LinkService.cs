@@ -115,14 +115,14 @@ namespace LinkedIt.Services.ControllerServices
 
 			var isAlreadyLinking = await _db.LinkUser.IsAlreadyLinking(linkerId, userToLink.Id);
 
-			var followingStatus = new
+			var linkStatus = new
 			{
-				UnLinker = linkerId,
-				UnLinking = userToLink.Id,
-				IsFollowing = isAlreadyLinking
+				Linker = linkerId,
+				Linking = userToLink.Id,
+				IsLinking = isAlreadyLinking
 			};
 
-			response.SetResponseInfo(HttpStatusCode.OK, new List<string> { }, followingStatus, true);
+			response.SetResponseInfo(HttpStatusCode.OK, new List<string> { }, linkStatus, true);
 			return response;
 		}
 
