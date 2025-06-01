@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,7 @@ namespace LinkedIt.Core.Models.User
 		public ICollection<UserLink>? Linkers { get; set; }
 		public ICollection<UserLink>? Linkings { get; set; }
 
-
+		[NotMapped]
+		public string FullName => $"{FirstName} {LastName}".Trim();
 	}
 }
