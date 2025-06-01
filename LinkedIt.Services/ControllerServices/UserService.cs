@@ -70,7 +70,7 @@ namespace LinkedIt.Services.ControllerServices
 			// User Will Change The UserName (Identifier)
 			if (userFromDb.UserName != userDto.UserName)
 			{
-				bool isUnique = await _db.User.IsUniqueUserName(userDto.UserName);
+				bool isUnique = await _db.User.IsUniqueUserNameAsync(userDto.UserName);
 
 				if (!isUnique) return APIResponse.Fail(new List<string> { "User Name Was Taken!." });
 			}
@@ -86,7 +86,7 @@ namespace LinkedIt.Services.ControllerServices
 			return response;
 		}
 
-		public async Task<APIResponse> DeleteUserProfile(string? userId)
+		public async Task<APIResponse> DeleteUserProfileAsync(string? userId)
 		{
 			APIResponse response = new APIResponse();
 

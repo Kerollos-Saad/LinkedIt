@@ -12,13 +12,13 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 {
 	public interface IUserRepository : IGenericRepository<ApplicationUser>
 	{
-		Task<bool> IsUniqueUserName(string userName);
-		Task<ApplicationUser> GetUserById(string userId);
+		Task<bool> IsUniqueUserNameAsync(string userName);
+		Task<ApplicationUser> GetUserByIdAsync(string userId);
 		Task<bool> UpdateAsync(String userId, UpdateUserDTO userDto);
 
 		// Authentication
-		Task<UserWithRolesDTO> GetUserWithRoles(String userName, String password);
-		Task<UserDTO> Register(RegisterRequestDTO registerRequestDTO);
+		Task<UserWithRolesDTO> GetUserWithRolesAsync(String userName, String password);
+		Task<UserDTO> RegisterAsync(RegisterRequestDTO registerRequestDTO);
 		
 	}
 }

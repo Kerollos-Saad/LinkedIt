@@ -9,11 +9,11 @@ namespace LinkedIt.Services.ControllerServices.IControllerServices
 {
 	public interface ILinkService
 	{
-		Task<APIResponse> LinkUser(String? linkerId, String? userName);
+		Task<APIResponse> LinkUserAsync(String? linkerId, String? userName);
 
-		Task<APIResponse> UnLinkUser(String? linkerId, String? userName);
+		Task<APIResponse> UnLinkUserAsync(String? linkerId, String? userName);
 
-		Task<APIResponse> IsLinkingWith(String? linkerId, String? userName);
+		Task<APIResponse> IsLinkingWithAsync(String? linkerId, String? userName);
 
 		Task<APIResponse> GetMutualLinkersForUserAsync(String? userId, String? targetUserName);
 

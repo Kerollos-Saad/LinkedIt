@@ -26,7 +26,7 @@ namespace LinkedIt.Services.ControllerServices
 			this._mapper = mapper;
 		}
 
-		public async Task<APIResponse> LinkUser(string? linkerId, string? userName)
+		public async Task<APIResponse> LinkUserAsync(string? linkerId, string? userName)
 		{
 			var response = new APIResponse();
 
@@ -62,7 +62,7 @@ namespace LinkedIt.Services.ControllerServices
 			return response;
 		}
 
-		public async Task<APIResponse> UnLinkUser(string? linkerId, string? userName)
+		public async Task<APIResponse> UnLinkUserAsync(string? linkerId, string? userName)
 		{
 			var response = new APIResponse();
 
@@ -98,7 +98,7 @@ namespace LinkedIt.Services.ControllerServices
 			return response;
 		}
 
-		public async Task<APIResponse> IsLinkingWith(string? linkerId, string? userName)
+		public async Task<APIResponse> IsLinkingWithAsync(string? linkerId, string? userName)
 		{
 			var response = new APIResponse();
 

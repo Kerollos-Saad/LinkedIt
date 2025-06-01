@@ -20,6 +20,6 @@ namespace LinkedIt.Services.ControllerServices.IControllerServices
 
 		Task<APIResponse> UpdateUserProfileAsync(String? userId, UpdateUserDTO userDto);
 
-		Task<APIResponse> DeleteUserProfile(String? userId);
+		Task<APIResponse> DeleteUserProfileAsync(String? userId);
 	}
 }

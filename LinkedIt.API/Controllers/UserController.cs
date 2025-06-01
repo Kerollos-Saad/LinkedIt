@@ -82,7 +82,7 @@ namespace LinkedIt.API.Controllers
 		{
 			var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			var response = await _userService.DeleteUserProfile(id);
+			var response = await _userService.DeleteUserProfileAsync(id);
 
 			if (response.StatusCode == HttpStatusCode.Unauthorized)
 				return Unauthorized(response);

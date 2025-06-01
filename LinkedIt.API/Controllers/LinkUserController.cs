@@ -23,7 +23,7 @@ namespace LinkedIt.API.Controllers
 		{
 			var linkerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			var response = await _linkService.LinkUser(linkerId, userName);
+			var response = await _linkService.LinkUserAsync(linkerId, userName);
 
 			if (response.StatusCode == HttpStatusCode.Unauthorized)
 				return Unauthorized(response);
@@ -39,7 +39,7 @@ namespace LinkedIt.API.Controllers
 		{
 			var linkerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			var response = await _linkService.UnLinkUser(linkerId, userName);
+			var response = await _linkService.UnLinkUserAsync(linkerId, userName);
 
 			if (response.StatusCode == HttpStatusCode.Unauthorized)
 				return Unauthorized(response);
@@ -55,7 +55,7 @@ namespace LinkedIt.API.Controllers
 		{
 			var linkerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			var response = await _linkService.IsLinkingWith(linkerId, userName);
+			var response = await _linkService.IsLinkingWithAsync(linkerId, userName);
 
 			if (response.StatusCode == HttpStatusCode.Unauthorized)
 				return Unauthorized(response);

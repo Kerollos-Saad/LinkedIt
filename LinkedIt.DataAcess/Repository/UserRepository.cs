@@ -42,7 +42,7 @@ namespace LinkedIt.DataAcess.Repository
 
 		}
 
-		public async Task<bool> IsUniqueUserName(string userName)
+		public async Task<bool> IsUniqueUserNameAsync(string userName)
 		{
 			var user = await _db.ApplicationUsers
 				.AsNoTracking()
@@ -50,7 +50,7 @@ namespace LinkedIt.DataAcess.Repository
 			return user == null;
 		}
 
-		public async Task<ApplicationUser> GetUserById(string userId)
+		public async Task<ApplicationUser> GetUserByIdAsync(string userId)
 		{
 			var user = await _db.ApplicationUsers.FindAsync(userId);
 			return user ?? throw new InvalidOperationException("User not found.");
@@ -73,7 +73,7 @@ namespace LinkedIt.DataAcess.Repository
 			return result > 0;
 		}
 
-		public async Task<UserWithRolesDTO?> GetUserWithRoles(String userName, String password)
+		public async Task<UserWithRolesDTO?> GetUserWithRolesAsync(String userName, String password)
 		{
 			var user = await _userManager.FindByNameAsync(userName);
 			if (user == null || !await _userManager.CheckPasswordAsync(user, password))
@@ -90,7 +90,7 @@ namespace LinkedIt.DataAcess.Repository
 			};
 		}
 
-		public async Task<UserDTO> Register(RegisterRequestDTO registerRequestDTO)
+		public async Task<UserDTO> RegisterAsync(RegisterRequestDTO registerRequestDTO)
 		{
 			var user = new ApplicationUser
 			{

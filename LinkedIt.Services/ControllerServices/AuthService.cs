@@ -40,7 +40,7 @@ namespace LinkedIt.Services.ControllerServices
 		{
 			APIResponse response = new APIResponse();
 
-			var userWithRoles = await _unitOfWork.User.GetUserWithRoles(loginRequestDTO.UserName, loginRequestDTO.Password);
+			var userWithRoles = await _unitOfWork.User.GetUserWithRolesAsync(loginRequestDTO.UserName, loginRequestDTO.Password);
 
 			if (userWithRoles == null)
 			{
@@ -78,7 +78,7 @@ namespace LinkedIt.Services.ControllerServices
 			}
 
 			// Unique User Name
-			bool isUnique = await _unitOfWork.User.IsUniqueUserName(registerDTO.UserName);
+			bool isUnique = await _unitOfWork.User.IsUniqueUserNameAsync(registerDTO.UserName);
 			if (!isUnique)
 			{
 				response.SetResponseInfo(HttpStatusCode.BadRequest, new List<string> { "User Name Was Taken!." },
