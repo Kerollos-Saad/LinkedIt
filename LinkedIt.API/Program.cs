@@ -8,6 +8,7 @@ using LinkedIt.Services.ControllerServices;
 using LinkedIt.Services.ControllerServices.IControllerServices;
 using LinkedIt.Services.JWTService;
 using LinkedIt.Services.JWTService.IJWTService;
+using LinkedIt.Services.ServiceRegistration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -46,11 +47,7 @@ namespace LinkedIt.API
 			builder.Services.AddScoped<RoleManager<IdentityRole>>();
 
 			// Add Services
-			builder.Services.AddScoped<IAuthService, AuthService>();
-			builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-
-			builder.Services.AddScoped<IUserService, UserService>();
-			builder.Services.AddScoped<ILinkService, LinkService>();
+			builder.Services.AddApplicationServices();
 
 			// Add OpenAPI with Bearer Authentication Support
 			#region JWT
