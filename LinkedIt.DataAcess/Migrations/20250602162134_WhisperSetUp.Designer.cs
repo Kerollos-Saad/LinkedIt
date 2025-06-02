@@ -4,6 +4,7 @@ using LinkedIt.DataAcess.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LinkedIt.DataAcess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250602162134_WhisperSetUp")]
+    partial class WhisperSetUp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -329,6 +332,10 @@ namespace LinkedIt.DataAcess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ReceiverId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("SenderId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -340,10 +347,12 @@ namespace LinkedIt.DataAcess.Migrations
                     b.Property<DateTime>("TalkDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("WhisperId")
+                    b.Property<Guid?>("WhisperId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ReceiverId");
 
                     b.HasIndex("SenderId");
 
@@ -620,21 +629,25 @@ namespace LinkedIt.DataAcess.Migrations
 
             modelBuilder.Entity("LinkedIt.Core.Models.Whisper.WhisperTalk", b =>
                 {
+                    b.HasOne("LinkedIt.Core.Models.User.ApplicationUser", "Receiver")
+                        .WithMany()
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("LinkedIt.Core.Models.User.ApplicationUser", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LinkedIt.Core.Models.Whisper.Whisper", "Whisper")
+                    b.HasOne("LinkedIt.Core.Models.Whisper.Whisper", null)
                         .WithMany("WhisperTalks")
-                        .HasForeignKey("WhisperId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("WhisperId");
+
+                    b.Navigation("Receiver");
 
                     b.Navigation("Sender");
-
-                    b.Navigation("Whisper");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

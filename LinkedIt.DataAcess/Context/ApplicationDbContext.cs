@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LinkedIt.Core.Models.Phantom_Signal;
+using LinkedIt.Core.Models.Whisper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -39,10 +40,15 @@ namespace LinkedIt.DataAcess.Context
 			builder.Entity<UserLink>()
 				.ToTable("UserLink", "system");
 
-			// Assign "system" schema to all entities in the Phantom_Signal namespace
+			// Assign "system" schema to all entities in the Phantom_Signal, Whisper namespaces
 			foreach (var entity in builder.Model.GetEntityTypes())
 			{
 				if (entity.ClrType?.Namespace == "LinkedIt.Core.Models.Phantom_Signal")
+				{
+					entity.SetSchema("system");
+				}
+
+				if (entity.ClrType?.Namespace == "LinkedIt.Core.Models.Whisper")
 				{
 					entity.SetSchema("system");
 				}
@@ -69,5 +75,8 @@ namespace LinkedIt.DataAcess.Context
 		public DbSet<PhantomSignalDown> PhantomSignalsDowns { get; set; }
 		public DbSet<PhantomSignalComment> PhantomSignalsComments { get; set; }
 		public DbSet<PhantomResignal> PhantomResignals { get; set; }
+
+		public DbSet<Whisper> Whispers { get; set; }
+		public DbSet<WhisperTalk> WhispersTalks { get; set; }
 	}
 }
