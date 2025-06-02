@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LinkedIt.Core.Models.Phantom_Signal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -38,6 +39,15 @@ namespace LinkedIt.DataAcess.Context
 			builder.Entity<UserLink>()
 				.ToTable("UserLink", "system");
 
+			// Assign "system" schema to all entities in the Phantom_Signal namespace
+			foreach (var entity in builder.Model.GetEntityTypes())
+			{
+				if (entity.ClrType?.Namespace == "LinkedIt.Core.Models.Phantom_Signal")
+				{
+					entity.SetSchema("system");
+				}
+			}
+
 			builder.Entity<UserLink>()
 				.HasOne(uf => uf.Linker)
 				.WithMany(u => u.Linkings)
@@ -53,5 +63,11 @@ namespace LinkedIt.DataAcess.Context
 
 		public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 		public DbSet<UserLink> UserLinks { get; set; }
+
+		public DbSet<PhantomSignal> PhantomSignals { get; set; }
+		public DbSet<PhantomSignalUp> PhantomSignalsUps { get; set; }
+		public DbSet<PhantomSignalDown> PhantomSignalsDowns { get; set; }
+		public DbSet<PhantomSignalComment> PhantomSignalsComments { get; set; }
+		public DbSet<PhantomResignal> PhantomResignals { get; set; }
 	}
 }
