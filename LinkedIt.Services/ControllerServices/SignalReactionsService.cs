@@ -57,5 +57,46 @@ namespace LinkedIt.Services.ControllerServices
 			}, true);
 			return response;
 		}
+
+		public async Task<APIResponse> DownPhantomSignalForUserAsync(string userId, Guid phantomSignalId)
+		{
+			var response = new APIResponse();
+
+			if (String.IsNullOrEmpty(userId))
+				return APIResponse.Fail(new List<string> { "UnAuthorize" }, HttpStatusCode.Unauthorized);
+			if (phantomSignalId == Guid.Empty)
+				return APIResponse.Fail(new List<string> { "UnValid Phantom Signal Id" });
+
+			var userExist = await _db.User.IsExistAsync(userId);
+			var signalExist = await _db.PhantomSignal.IsExistAsync(phantomSignalId);
+			if (!userExist)
+				return APIResponse.Fail(new List<string> { "UnAuthorize, User Does Not Exist" });
+			if (!signalExist)
+				return APIResponse.Fail(new List<string> { "UnAuthorize, Signal Does Not Exist" });
+
+			var success = false;
+			// toggle Up Vote
+			var alreadyDownByUser = await _db.PhantomSignalDown.IsSignalDownByUser(userId, phantomSignalId);
+			if (alreadyDownByUser)
+			{
+				success = await _db.PhantomSignalDown.DownPhantomSignalUndoAsync(userId, phantomSignalId);
+				if (!success)
+					return APIResponse.Fail(new List<string> { "Failed To DownVote!" });
+			}
+			else
+			{
+				success = await _db.PhantomSignalDown.DownPhantomSignalAsync(userId, phantomSignalId);
+				if (!success)
+					return APIResponse.Fail(new List<string> { "Failed To DownVote!" });
+			}
+
+			response.SetResponseInfo(HttpStatusCode.OK, null, new
+			{
+				Status = alreadyDownByUser ? "Remove Down Vote Successfully" : "Added Down Vote Successfully",
+				UserId = userId,
+				PhantomSignalId = phantomSignalId
+			}, true);
+			return response;
+		}
 	}
 }

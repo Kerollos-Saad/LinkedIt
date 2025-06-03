@@ -31,5 +31,20 @@ namespace LinkedIt.API.Controllers
 				_ => Ok(response)
 			};
 		}
+
+		[HttpPut("DownSignal/{phantomSignalId}")]
+		public async Task<IActionResult> DownPhantomSignal([FromRoute] Guid phantomSignalId)
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			var response = await _signalReactionsService.DownPhantomSignalForUserAsync(userId, phantomSignalId);
+
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				HttpStatusCode.BadRequest => BadRequest(response),
+				_ => Ok(response)
+			};
+		}
 	}
 }
