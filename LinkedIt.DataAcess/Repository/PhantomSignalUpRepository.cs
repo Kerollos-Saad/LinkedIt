@@ -52,6 +52,9 @@ namespace LinkedIt.DataAcess.Repository
 				u.ApplicationUserId == userId &&
 				u.PhantomSignalId == phantomSignalId);
 
+			var existPhantomSignal = await _db.PhantomSignals.FindAsync(phantomSignalId);
+			existPhantomSignal.UpCount--;
+
 			_db.PhantomSignalsUps.Remove(up);
 
 			var result = await _db.SaveChangesAsync();
