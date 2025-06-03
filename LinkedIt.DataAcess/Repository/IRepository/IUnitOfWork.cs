@@ -11,6 +11,7 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 		IUserRepository User { get; }
 		ILinkUserRepository LinkUser { get; }
 		IPhantomSignalRepository PhantomSignal { get; }
+		IPhantomSignalUpRepository PhantomSignalUp { get; }
 		Task<bool> SaveAsync();
 	}
 }
