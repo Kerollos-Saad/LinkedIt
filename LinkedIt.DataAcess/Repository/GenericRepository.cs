@@ -83,9 +83,13 @@ namespace LinkedIt.DataAcess.Repository
 			return query.FirstOrDefault();
 		}
 
-		public Task<T?> FindAsync(Expression<Func<T, bool>>? filter, string[]? includeProperties = null)
+		public Task<T?> FindAsync(Expression<Func<T, bool>>? filter, string[]? includeProperties = null, bool asNoTracking = false)
 		{
 			IQueryable<T?> query = DbSet;
+
+			// Prevent EF From automatically tracking entities 
+			if (asNoTracking)
+				query = query.AsNoTracking();
 
 			// Apply Filtering
 			if (filter != null)

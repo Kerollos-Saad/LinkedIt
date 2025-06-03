@@ -37,7 +37,7 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 		// ---------------------------------------------------------------------
 
 		T? Find(Expression<Func<T, bool>>? filter, string[]? includeProperties = null);
-		Task<T?> FindAsync(Expression<Func<T, bool>>? filter, string[]? includeProperties = null);
+		Task<T?> FindAsync(Expression<Func<T, bool>>? filter, string[]? includeProperties = null, bool asNoTracking = false);
 
 		// ---------------------------------------------------------------------
 		// ---------------------------------------------------------------------

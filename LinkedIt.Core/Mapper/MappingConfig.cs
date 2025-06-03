@@ -6,7 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using LinkedIt.Core.DTOs.AppUsers;
 using LinkedIt.Core.DTOs.Linker;
+using LinkedIt.Core.DTOs.PhantomSignal;
 using LinkedIt.Core.DTOs.User;
+using LinkedIt.Core.Models.Phantom_Signal;
 using LinkedIt.Core.Models.User;
 
 namespace LinkedIt.Core.Mapper
@@ -28,6 +30,9 @@ namespace LinkedIt.Core.Mapper
 				.ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id))
 				.ForMember(dest => dest.UserName, opt => opt.MapFrom(src =>src.UserName))
 				.ReverseMap();
+
+			CreateMap<PhantomSignal, AddPhantomSignalDTO>().ReverseMap(); // BothWays
+			CreateMap<PhantomSignal, PhantomSignalDTO>().ReverseMap(); // BothWays
 		}
 	}
 }

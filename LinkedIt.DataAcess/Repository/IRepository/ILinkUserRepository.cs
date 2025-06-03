@@ -8,7 +8,7 @@ using LinkedIt.Core.Models.User;
 
 namespace LinkedIt.DataAcess.Repository.IRepository
 {
-	public interface ILinkUserRepository
+	public interface ILinkUserRepository : IGenericRepository<UserLink>
 	{
 		Task<bool?> IsAlreadyLinking(String linkerId, String linkedId);
 

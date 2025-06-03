@@ -24,6 +24,7 @@ namespace LinkedIt.DataAcess.Repository
 
 		public IUserRepository User { get; private set; }
 		public ILinkUserRepository LinkUser { get; private set; }
+		public IPhantomSignalRepository PhantomSignal { get; private set; }
 
 		public UnitOfWork(ApplicationDbContext db, IMapper mapper, IConfiguration config,
 			UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
@@ -36,6 +37,7 @@ namespace LinkedIt.DataAcess.Repository
 			
 			User = new UserRepository(db, userManager, roleManager, config, mapper);
 			LinkUser = new LinkUserRepository(db);
+			PhantomSignal = new PhantomSignalRepository(db);
 		}
 
 		public async Task<bool> SaveAsync()
