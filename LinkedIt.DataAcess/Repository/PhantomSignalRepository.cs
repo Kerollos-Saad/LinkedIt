@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LinkedIt.Core.DTOs.PhantomSignal;
 using LinkedIt.Core.Models.Phantom_Signal;
 using LinkedIt.DataAcess.Context;
 using LinkedIt.DataAcess.Repository.IRepository;
@@ -27,6 +28,17 @@ namespace LinkedIt.DataAcess.Repository
 		{
 			var phantomSignal = await _db.PhantomSignals.FindAsync(phantomSignalId);
 			return phantomSignal != null && phantomSignal.ApplicationUserId == userId;
+		}
+
+		public async Task<bool> UpdatePhantomSignalAsync(Guid phantomSignalId, AddPhantomSignalDTO phantomSignal)
+		{
+			var existPhantomSignal = await _db.PhantomSignals.FindAsync(phantomSignalId);
+
+			existPhantomSignal.SignalDate = DateTime.Now;
+			existPhantomSignal.SignalContent = phantomSignal.SignalContent;
+
+			var result = await _db.SaveChangesAsync();
+			return result > 0;
 		}
 	}
 }

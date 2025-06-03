@@ -84,7 +84,7 @@ namespace LinkedIt.Services.ControllerServices
 			return response;
 		}
 
-		public async Task<APIResponse> RemovePhantomSignalAsync(string userId, Guid phantomSignalId)
+		public async Task<APIResponse> RemovePhantomSignalAsync(String userId, Guid phantomSignalId)
 		{
 			var response = new APIResponse();
 
@@ -111,6 +111,36 @@ namespace LinkedIt.Services.ControllerServices
 
 			if (!success)
 				return APIResponse.Fail(new List<string> { "Failed To Remove!" });
+
+			response.SetResponseInfo(HttpStatusCode.OK, null, phantomSignalId, true);
+			return response;
+		}
+
+		public async Task<APIResponse> UpdatePhantomSignalForUserAsync(String userId, Guid phantomSignalId, AddPhantomSignalDTO updatePhantomSignalDto)
+		{
+			var response = new APIResponse();
+
+			if (String.IsNullOrEmpty(userId))
+				return APIResponse.Fail(new List<string> { "UnAuthorize" }, HttpStatusCode.Unauthorized);
+			if (phantomSignalId == Guid.Empty)
+				return APIResponse.Fail(new List<string> { "UnValid Phantom Signal Id" });
+			if(String.IsNullOrEmpty(updatePhantomSignalDto.SignalContent))
+				return APIResponse.Fail(new List<string> { "UnValid Phantom Signal Content" });
+
+			var userExist = await _db.User.IsExistAsync(userId);
+			var signalExist = await _db.PhantomSignal.IsExistAsync(phantomSignalId);
+			if(!userExist)
+				return APIResponse.Fail(new List<string> { "UnAuthorize, User Does Not Exist" });
+			if(!signalExist)
+				return APIResponse.Fail(new List<string> { "UnAuthorize, Signal Does Not Exist" });
+
+			var signalProperty = await _db.PhantomSignal.IsSignalHisPropertyAsync(userId, phantomSignalId);
+			if(!signalProperty)
+				return APIResponse.Fail(new List<string> { "UnAuthorize, Not Your Signal" }, HttpStatusCode.Unauthorized);
+
+			var success = await _db.PhantomSignal.UpdatePhantomSignalAsync(phantomSignalId, updatePhantomSignalDto);
+			if(!success)
+				return APIResponse.Fail(new List<string> { "Failed To Update" });
 
 			response.SetResponseInfo(HttpStatusCode.OK, null, phantomSignalId, true);
 			return response;

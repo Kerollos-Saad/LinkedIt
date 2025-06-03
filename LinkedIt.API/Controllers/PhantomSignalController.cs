@@ -20,12 +20,12 @@ namespace LinkedIt.API.Controllers
 			this._phantomSignalService = phantomSignalService;
 		}
 
-		[HttpGet("{phantomSignalId}")]
-		public async Task<IActionResult> GetPhantomSignal([FromRoute] Guid phantomSignalId)
+		[HttpPost]
+		public async Task<IActionResult> AddPhantomSignal([FromBody] AddPhantomSignalDTO phantomSignalDto)
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			var response = await _phantomSignalService.GetPhantomSignalAsync(userId, phantomSignalId);
+			var response = await _phantomSignalService.AddPhantomSignalAsync(userId, phantomSignalDto);
 
 			return response.StatusCode switch
 			{
@@ -35,12 +35,12 @@ namespace LinkedIt.API.Controllers
 			};
 		}
 
-		[HttpPost]
-		public async Task<IActionResult> AddPhantomSignal([FromBody] AddPhantomSignalDTO phantomSignalDto)
+		[HttpGet("{phantomSignalId}")]
+		public async Task<IActionResult> GetPhantomSignal([FromRoute] Guid phantomSignalId)
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			var response = await _phantomSignalService.AddPhantomSignalAsync(userId, phantomSignalDto);
+			var response = await _phantomSignalService.GetPhantomSignalAsync(userId, phantomSignalId);
 
 			return response.StatusCode switch
 			{
@@ -65,5 +65,19 @@ namespace LinkedIt.API.Controllers
 			};
 		}
 
+		[HttpPut("{phantomSignalId}")]
+		public async Task<IActionResult> EditPhantomSignal([FromRoute] Guid phantomSignalId, [FromBody]AddPhantomSignalDTO editPhantomSignalDto)
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			var response = await _phantomSignalService.UpdatePhantomSignalForUserAsync(userId, phantomSignalId, editPhantomSignalDto);
+
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				HttpStatusCode.BadRequest => BadRequest(response),
+				_ => Ok(response)
+			};
+		}
 	}
 }
