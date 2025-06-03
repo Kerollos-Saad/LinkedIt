@@ -66,6 +66,7 @@ namespace LinkedIt.Services.ControllerServices
 			if (phantomSignalId == Guid.Empty)
 				return APIResponse.Fail(new List<string> { "UnValid Phantom Signal Id" });
 
+			// Use This Stupid Way Only To Figure Out the Auto EF Tracking Entities
 			var phantomSignal = await _db.PhantomSignal.FindAsync(s => s.Id == phantomSignalId, asNoTracking: true);
 			var user = await _db.User.FindAsync(u => u.Id == userId);
 
@@ -80,6 +81,38 @@ namespace LinkedIt.Services.ControllerServices
 			var result = _mapper.Map<PhantomSignalDTO>(phantomSignal);
 
 			response.SetResponseInfo(HttpStatusCode.OK, null, result, true);
+			return response;
+		}
+
+		public async Task<APIResponse> RemovePhantomSignalAsync(string userId, Guid phantomSignalId)
+		{
+			var response = new APIResponse();
+
+			if (String.IsNullOrEmpty(userId))
+				return APIResponse.Fail(new List<string> { "UnAuthorize" }, HttpStatusCode.Unauthorized);
+
+			if (phantomSignalId == Guid.Empty)
+				return APIResponse.Fail(new List<string> { "UnValid Phantom Signal Id" });
+
+			// To Avoid Tracking Entities 
+			var phantomSignalExist = await _db.PhantomSignal.IsSignalExist(phantomSignalId); // Normal Tracking
+
+			if (!phantomSignalExist)
+				return APIResponse.Fail(new List<string> { "Phantom Signal Not Found" });
+
+			var isSignalHisProperty = await _db.PhantomSignal.IsSignalHisPropertyAsync(userId, phantomSignalId);
+			if(!isSignalHisProperty)
+				return APIResponse.Fail(new List<string> { "UnAuthorize, Not Your Signal!" }, HttpStatusCode.Unauthorized);
+
+			var phantomSignal = await _db.PhantomSignal.FindAsync(s => s.Id == phantomSignalId);
+
+			await _db.PhantomSignal.RemoveAsync(phantomSignal);
+			var success = await _db.SaveAsync();
+
+			if (!success)
+				return APIResponse.Fail(new List<string> { "Failed To Remove!" });
+
+			response.SetResponseInfo(HttpStatusCode.OK, null, phantomSignalId, true);
 			return response;
 		}
 	}

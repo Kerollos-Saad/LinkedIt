@@ -22,6 +22,18 @@ namespace LinkedIt.DataAcess.Repository
 			this.DbSet = db.Set<T>();
 		}
 
+		public bool IsExist<TKey>(TKey id)
+		{
+			var entity = _db.Set<T>().Find(id);
+			return entity != null;
+		}
+
+		public async Task<bool> IsExistAsync<TKey>(TKey id)
+		{
+			var entity = await _db.Set<T>().FindAsync(id);
+			return entity != null;
+		}
+
 		public T Add(T entity)
 		{
 			_db.Set<T>().Add(entity);

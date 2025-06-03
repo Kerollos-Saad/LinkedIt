@@ -9,6 +9,7 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 {
 	public interface IPhantomSignalRepository : IGenericRepository<PhantomSignal>
 	{
-
+		Task<bool> IsSignalExist(Guid phantomSignalId);
+		Task<bool> IsSignalHisPropertyAsync(String userId, Guid phantomSignalId);
 	}
 }

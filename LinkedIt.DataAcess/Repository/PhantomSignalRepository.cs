@@ -17,5 +17,16 @@ namespace LinkedIt.DataAcess.Repository
 			this._db = db;
 		}
 
+		public async Task<bool> IsSignalExist(Guid phantomSignalId)
+		{
+			var result = await _db.PhantomSignals.FindAsync(phantomSignalId);
+			return result != null;
+		}
+
+		public async Task<bool> IsSignalHisPropertyAsync(string userId, Guid phantomSignalId)
+		{
+			var phantomSignal = await _db.PhantomSignals.FindAsync(phantomSignalId);
+			return phantomSignal != null && phantomSignal.ApplicationUserId == userId;
+		}
 	}
 }

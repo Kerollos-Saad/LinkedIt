@@ -20,12 +20,12 @@ namespace LinkedIt.API.Controllers
 			this._phantomSignalService = phantomSignalService;
 		}
 
-		[HttpGet("{PhantomSignalId}")]
-		public async Task<IActionResult> GetPhantomSignal([FromRoute] Guid PhantomSignalId)
+		[HttpGet("{phantomSignalId}")]
+		public async Task<IActionResult> GetPhantomSignal([FromRoute] Guid phantomSignalId)
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			var response = await _phantomSignalService.GetPhantomSignalAsync(userId, PhantomSignalId);
+			var response = await _phantomSignalService.GetPhantomSignalAsync(userId, phantomSignalId);
 
 			return response.StatusCode switch
 			{
@@ -50,6 +50,20 @@ namespace LinkedIt.API.Controllers
 			};
 		}
 
+		[HttpDelete("{phantomSignalId}")]
+		public async Task<IActionResult> DeletePhantomSignal([FromRoute] Guid phantomSignalId)
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			var response = await _phantomSignalService.RemovePhantomSignalAsync(userId, phantomSignalId);
+
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				HttpStatusCode.BadRequest => BadRequest(response),
+				_ => Ok(response)
+			};
+		}
 
 	}
 }
