@@ -18,7 +18,7 @@ namespace LinkedIt.API.Controllers
 			_signalReactionsService = signalReactionsService;
 		}
 
-		[HttpPut("UpSignal/{phantomSignalId}"), Authorize]
+		[HttpPost("UpSignal/{phantomSignalId}"), Authorize]
 		public async Task<IActionResult> UpPhantomSignal([FromRoute] Guid phantomSignalId)
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -33,7 +33,7 @@ namespace LinkedIt.API.Controllers
 			};
 		}
 
-		[HttpPut("DownSignal/{phantomSignalId}"), Authorize]
+		[HttpPost("DownSignal/{phantomSignalId}"), Authorize]
 		public async Task<IActionResult> DownPhantomSignal([FromRoute] Guid phantomSignalId)
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
