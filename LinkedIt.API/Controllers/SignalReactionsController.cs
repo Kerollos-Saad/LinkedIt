@@ -60,5 +60,31 @@ namespace LinkedIt.API.Controllers
 				_ => Ok(response)
 			};
 		}
+
+		[HttpGet("UpVoteUsers/{phantomSignalId}")]
+		public async Task<IActionResult> GetPhantomSignalUpUsers([FromRoute] Guid phantomSignalId)
+		{
+			var response = await _signalReactionsService.GetPhantomSignalUpUsersForUserAsync(phantomSignalId);
+
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				HttpStatusCode.BadRequest => BadRequest(response),
+				_ => Ok(response)
+			};
+		}
+
+		[HttpGet("DownVoteUsers/{phantomSignalId}")]
+		public async Task<IActionResult> GetPhantomSignalDownUsers([FromRoute] Guid phantomSignalId)
+		{
+			var response = await _signalReactionsService.GetPhantomSignalDownUsersForUserAsync(phantomSignalId);
+
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				HttpStatusCode.BadRequest => BadRequest(response),
+				_ => Ok(response)
+			};
+		}
 	}
 }

@@ -13,6 +13,8 @@ namespace LinkedIt.Services.ControllerServices
 	public class SignalReactionsService : ISignalReactionsService
 	{
 		private readonly IUnitOfWork _db;
+		private ISignalReactionsService _signalReactionsServiceImplementation;
+
 		public SignalReactionsService(IUnitOfWork db)
 		{
 			this._db = db;
@@ -123,6 +125,48 @@ namespace LinkedIt.Services.ControllerServices
 			}, true);
 			return response;
 
+		}
+
+		public async Task<APIResponse> GetPhantomSignalUpUsersForUserAsync(Guid phantomSignalId)
+		{
+			var response = new APIResponse();
+
+			if (phantomSignalId == Guid.Empty)
+				return APIResponse.Fail(new List<string> { "UnValid Phantom Signal Id" });
+
+			var signalExist = await _db.PhantomSignal.IsExistAsync(phantomSignalId);
+			if (!signalExist)
+				return APIResponse.Fail(new List<string> { "UnAuthorize, Signal Does Not Exist" });
+
+			var upsUserNames = await _db.PhantomSignalUp.UserNamesUpPhantomSignalAsync(phantomSignalId);
+
+			response.SetResponseInfo(HttpStatusCode.OK, null, new
+			{
+				UpList = upsUserNames,
+				PhantomSignalId = phantomSignalId
+			}, true);
+			return response;
+		}
+
+		public async Task<APIResponse> GetPhantomSignalDownUsersForUserAsync(Guid phantomSignalId)
+		{
+			var response = new APIResponse();
+
+			if (phantomSignalId == Guid.Empty)
+				return APIResponse.Fail(new List<string> { "UnValid Phantom Signal Id" });
+
+			var signalExist = await _db.PhantomSignal.IsExistAsync(phantomSignalId);
+			if (!signalExist)
+				return APIResponse.Fail(new List<string> { "UnAuthorize, Signal Does Not Exist" });
+
+			var downsUserNames = await _db.PhantomSignalDown.UserNamesDownPhantomSignalAsync(phantomSignalId);
+
+			response.SetResponseInfo(HttpStatusCode.OK, null, new
+			{
+				Downlist = downsUserNames,
+				PhantomSignalId = phantomSignalId
+			}, true);
+			return response;
 		}
 	}
 }
