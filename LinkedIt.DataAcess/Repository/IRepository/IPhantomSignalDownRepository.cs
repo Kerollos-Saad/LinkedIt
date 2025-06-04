@@ -12,5 +12,7 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 		Task<bool> IsSignalDownByUser(String userId, Guid phantomSignalId);
 		Task<bool> DownPhantomSignalAsync(String userId, Guid phantomSignalId);
 		Task<bool> DownPhantomSignalUndoAsync(String userId, Guid phantomSignalId);
+		Task<ICollection<String>> UserNamesDownPhantomSignalAsync(Guid phantomSignalId);
+
 	}
 }

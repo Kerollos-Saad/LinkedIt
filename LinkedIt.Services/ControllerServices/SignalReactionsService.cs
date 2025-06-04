@@ -98,5 +98,31 @@ namespace LinkedIt.Services.ControllerServices
 			}, true);
 			return response;
 		}
+
+		public async Task<APIResponse> PhantomSignalReactionsForUserAsync(Guid phantomSignalId)
+		{
+			var response = new APIResponse();
+
+			if (phantomSignalId == Guid.Empty)
+				return APIResponse.Fail(new List<string> { "UnValid Phantom Signal Id" });
+
+			var signalExist = await _db.PhantomSignal.IsExistAsync(phantomSignalId);
+			if (!signalExist)
+				return APIResponse.Fail(new List<string> { "UnAuthorize, Signal Does Not Exist" });
+
+			//var ups = await _db.PhantomSignalUp.FindAllAsync(u=>u.PhantomSignalId == phantomSignalId, new []{"ApplicationUser"});
+			//var downs = await _db.PhantomSignalDown.FindAllAsync(u => u.PhantomSignalId == phantomSignalId, new []{"ApplicationUser"});
+			var upsUserNames = await _db.PhantomSignalUp.UserNamesUpPhantomSignalAsync(phantomSignalId);
+			var downsUserNames = await _db.PhantomSignalDown.UserNamesDownPhantomSignalAsync(phantomSignalId);
+
+			response.SetResponseInfo(HttpStatusCode.OK, null, new
+			{
+				UpList = upsUserNames,
+				Downlist = downsUserNames,
+				PhantomSignalId = phantomSignalId
+			}, true);
+			return response;
+
+		}
 	}
 }

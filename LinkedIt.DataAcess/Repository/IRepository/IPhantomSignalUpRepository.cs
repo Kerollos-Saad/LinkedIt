@@ -12,5 +12,6 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 		Task<bool> IsSignalUpByUser(String userId, Guid phantomSignalId);
 		Task<bool> UpPhantomSignalAsync(String userId, Guid phantomSignalId);
 		Task<bool> UpPhantomSignalUndoAsync(String userId, Guid phantomSignalId);
+		Task<ICollection<String>> UserNamesUpPhantomSignalAsync(Guid phantomSignalId);
 	}
 }
