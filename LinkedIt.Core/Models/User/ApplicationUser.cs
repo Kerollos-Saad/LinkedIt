@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LinkedIt.Core.Models.Phantom_Signal;
 using Microsoft.AspNetCore.Identity;
 
 namespace LinkedIt.Core.Models.User
@@ -29,5 +30,12 @@ namespace LinkedIt.Core.Models.User
 
 		[NotMapped]
 		public string FullName => $"{FirstName} {LastName}".Trim();
+
+		public virtual ICollection<PhantomSignal> PhantomSignals { get; set; } = new HashSet<PhantomSignal>();
+		public virtual ICollection<PhantomSignalUp> PhantomSignalsUp { get; set; } = new HashSet<PhantomSignalUp>();
+		public virtual ICollection<PhantomSignalDown> PhantomSignalsDown { get; set; } = new HashSet<PhantomSignalDown>();
+		public virtual ICollection<PhantomSignalComment> PhantomSignalsComment { get; set; } = new HashSet<PhantomSignalComment>();
+		public virtual ICollection<PhantomResignal> PhantomResignals { get; set; } = new HashSet<PhantomResignal>();
+
 	}
 }
