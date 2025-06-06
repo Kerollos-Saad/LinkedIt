@@ -135,5 +135,32 @@ namespace LinkedIt.Services.ControllerServices
 			response.SetResponseInfo(HttpStatusCode.Created, null, signalCommentDetailsDto, true);
 			return response;
 		}
+
+		public async Task<APIResponse> DeletePhantomSignalCommentForUserAsync(string userId, int commentId)
+		{
+			var response = new APIResponse();
+
+			if (String.IsNullOrEmpty(userId))
+				return APIResponse.Fail(new List<string> { "UnAuthorize" }, HttpStatusCode.Unauthorized);
+
+			var userExist = await _db.User.IsExistAsync(userId);
+			var commentExist = await _db.PhantomSignalComment.IsExistAsync(commentId);
+			if (!userExist)
+				return APIResponse.Fail(new List<string> { "User Does Not Exist" }, HttpStatusCode.NotFound);
+			if (!commentExist)
+				return APIResponse.Fail(new List<string> { "Comment Does Not Exist" }, HttpStatusCode.NotFound);
+
+			var isCommentHisProperty = await _db.PhantomSignalComment.IsCommentHisPropertyAsync(userId, commentId);
+			if (!isCommentHisProperty)
+				return APIResponse.Fail(new List<string> { "UnAuthorize, not Your Comment!" }, HttpStatusCode.Unauthorized);
+
+			var success = await _db.PhantomSignalComment.DeleteAsync(commentId);
+
+			if (!success)
+				return APIResponse.Fail(new List<string> { "Failed to remove your comment" });
+
+			response.SetResponseInfo(HttpStatusCode.Created, null, commentId, true);
+			return response;
+		}
 	}
 }

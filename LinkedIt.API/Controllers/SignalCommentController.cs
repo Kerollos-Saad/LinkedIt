@@ -92,5 +92,21 @@ namespace LinkedIt.API.Controllers
 				_ => Ok(response)
 			};
 		}
+
+		[HttpDelete("{commentId}"), Authorize]
+		public async Task<IActionResult> DeletePhantomSignalComment([FromRoute] int commentId)
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			var response = await _signalCommentService.DeletePhantomSignalCommentForUserAsync(userId, commentId);
+
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				HttpStatusCode.BadRequest => BadRequest(response),
+				HttpStatusCode.NotFound => NotFound(response),
+				_ => Ok(response)
+			};
+		}
 	}
 }

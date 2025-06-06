@@ -15,6 +15,7 @@ namespace LinkedIt.Services.ControllerServices.IControllerServices
 		Task<APIResponse> GetCommentPhantomSignalForUserV1Async(int commentId);
 		Task<APIResponse> GetCommentPhantomSignalForUserV2Async (int commentId);
 		Task<APIResponse> GetCommentPhantomSignalForUserV3Async (int commentId);
+		Task<APIResponse> DeletePhantomSignalCommentForUserAsync(String userId, int commentId);
 
 	}
 }

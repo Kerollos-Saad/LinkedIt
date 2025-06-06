@@ -119,5 +119,33 @@ namespace LinkedIt.DataAcess.Repository
 
 			return commentWithDetailsDto;
 		}
+
+		public async Task<bool> DeleteAsync(int commentId)
+		{
+			var comment = await _db.PhantomSignalsComments
+				.FirstOrDefaultAsync(c => c.Id == commentId);
+			var signal = await _db.PhantomSignals
+				.FirstOrDefaultAsync(s => s.Id == comment.PhantomSignalId);
+
+			if (signal == null)
+				return false;
+
+			await using var transaction = await _db.Database.BeginTransactionAsync();
+			try
+			{
+				_db.PhantomSignalsComments.Remove(comment);
+				signal.CommentCount--;
+
+				var success = await _db.SaveChangesAsync();
+				await transaction.CommitAsync();
+
+				return success > 0;
+			}
+			catch
+			{
+				await transaction.RollbackAsync();
+				throw;
+			}
+		}
 	}
 }

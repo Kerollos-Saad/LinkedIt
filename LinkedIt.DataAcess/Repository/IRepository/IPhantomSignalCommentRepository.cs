@@ -15,5 +15,6 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 		Task<bool> IsCommentHisPropertyAsync(String userId, int commentId);
 		Task<SignalCommentDetailsDTO> GetCommentPhantomSignalV1Async(int commentId);
 		Task<SignalCommentDetailsDTO> GetCommentPhantomSignalV2Async(int commentId);
+		Task<bool> DeleteAsync(int commentId);
 	}
 }
