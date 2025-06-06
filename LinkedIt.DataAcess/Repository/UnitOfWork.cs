@@ -43,7 +43,7 @@ namespace LinkedIt.DataAcess.Repository
 			PhantomSignal = new PhantomSignalRepository(db);
 			PhantomSignalUp = new PhantomSignalUpRepository(db);
 			PhantomSignalDown = new PhantomSignalDownRepository(db);
-			PhantomSignalComment = new PhantomSignalCommentRepository(db);
+			PhantomSignalComment = new PhantomSignalCommentRepository(db, mapper);
 		}
 
 		public async Task<bool> SaveAsync()

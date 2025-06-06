@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using LinkedIt.Core.DTOs.AppUsers;
 using LinkedIt.Core.DTOs.Linker;
 using LinkedIt.Core.DTOs.PhantomSignal;
+using LinkedIt.Core.DTOs.SignalComment;
 using LinkedIt.Core.DTOs.User;
 using LinkedIt.Core.Models.Phantom_Signal;
 using LinkedIt.Core.Models.User;
@@ -33,6 +34,7 @@ namespace LinkedIt.Core.Mapper
 
 			CreateMap<PhantomSignal, AddPhantomSignalDTO>().ReverseMap(); // BothWays
 			CreateMap<PhantomSignal, PhantomSignalDTO>().ReverseMap(); // BothWays
+			CreateMap<PhantomSignalComment, SignalCommentDetailsDTO>().ReverseMap(); // BothWays
 		}
 	}
 }

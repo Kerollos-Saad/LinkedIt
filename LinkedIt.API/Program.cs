@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using LinkedIt.Core.Models.User;
 using LinkedIt.Core.Mapper;
 using LinkedIt.DataAcess.Context;
@@ -111,6 +112,7 @@ namespace LinkedIt.API
 
 
 			// Add services to the container.
+			// IgnoreCycling [ Temporary Solution ] [ I Know About Cycling Reference Problem ]
 			builder.Services.AddControllers();
 
             // Register Swagger services

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,5 +19,7 @@ namespace LinkedIt.Core.DTOs.AppUsers
 		public string PhoneNumber { get; set; }
 		public DateTime BirthDate { get; set; }
 		public DateTime UserCreated { get; set; }
+
+		public string FullName => $"{FirstName} {LastName}".Trim();
 	}
 }

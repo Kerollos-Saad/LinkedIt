@@ -11,7 +11,6 @@ namespace LinkedIt.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	[Authorize]
 	public class SignalCommentController : ControllerBase
 	{
 		private readonly ISignalCommentService _signalCommentService;
@@ -20,7 +19,7 @@ namespace LinkedIt.API.Controllers
 			this._signalCommentService = signalCommentService;
 		}
 
-		[HttpPost("{phantomSignalId}")]
+		[HttpPost("{phantomSignalId}"), Authorize]
 		public async Task<IActionResult> AddCommentPhantomSignal([FromRoute] Guid phantomSignalId, PhantomSignalCommentDTO phantomSignalCommentDto)
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -31,11 +30,12 @@ namespace LinkedIt.API.Controllers
 			{
 				HttpStatusCode.Unauthorized => Unauthorized(response),
 				HttpStatusCode.BadRequest => BadRequest(response),
+				HttpStatusCode.NotFound => NotFound(response),
 				_ => Ok(response)
 			};
 		}
 
-		[HttpPut("{commentId}")]
+		[HttpPut("{commentId}"), Authorize]
 		public async Task<IActionResult> UpdateCommentPhantomSignal([FromRoute] int commentId, PhantomSignalCommentDTO phantomSignalCommentDto)
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -46,6 +46,49 @@ namespace LinkedIt.API.Controllers
 			{
 				HttpStatusCode.Unauthorized => Unauthorized(response),
 				HttpStatusCode.BadRequest => BadRequest(response),
+				HttpStatusCode.NotFound => NotFound(response),
+				_ => Ok(response)
+			};
+		}
+
+		[HttpGet("V1/{commentId}")]
+		public async Task<IActionResult> GetCommentPhantomSignal([FromRoute] int commentId)
+		{
+			var response = await _signalCommentService.GetCommentPhantomSignalForUserV1Async(commentId);
+
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				HttpStatusCode.BadRequest => BadRequest(response),
+				HttpStatusCode.NotFound => NotFound(response),
+				_ => Ok(response)
+			};
+		}
+
+		[HttpGet("V2/{commentId}")]
+		public async Task<IActionResult> GetCommentPhantomSignalV2([FromRoute] int commentId)
+		{
+			var response = await _signalCommentService.GetCommentPhantomSignalForUserV2Async(commentId);
+
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				HttpStatusCode.BadRequest => BadRequest(response),
+				HttpStatusCode.NotFound => NotFound(response),
+				_ => Ok(response)
+			};
+		}
+
+		[HttpGet("V3/{commentId}")]
+		public async Task<IActionResult> GetCommentPhantomSignalV3([FromRoute] int commentId)
+		{
+			var response = await _signalCommentService.GetCommentPhantomSignalForUserV3Async(commentId);
+
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				HttpStatusCode.BadRequest => BadRequest(response),
+				HttpStatusCode.NotFound => NotFound(response),
 				_ => Ok(response)
 			};
 		}
