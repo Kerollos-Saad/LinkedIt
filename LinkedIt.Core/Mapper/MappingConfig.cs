@@ -55,7 +55,8 @@ namespace LinkedIt.Core.Mapper
 
 			CreateMap<PhantomResignal, ResignalDTO>()
 				.ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.ApplicationUser.UserName))
-				.ForMember(dest => dest.ResignalDate, opt => opt.MapFrom(src => src.ResignalDate));
+				.ForMember(dest => dest.ResignalDate, opt => opt.MapFrom(src => src.ResignalDate))
+				.ForMember(dest => dest.ReSignalContent, opt => opt.MapFrom(src => src.ReSignalContent));
 
 			CreateMap<PhantomSignal, PhantomSignalDetailsDTO>()
 				.ForMember(dest => dest.PhantomSignal, opt => opt.MapFrom(src => src))

@@ -10,5 +10,6 @@ namespace LinkedIt.Core.DTOs.PhantomResignal
 	{
 		public String UserName { get; set; }
 		public DateTime ResignalDate { get; set; }
+		public String? ReSignalContent { get; set; }
 	}
 }
