@@ -65,6 +65,7 @@ namespace LinkedIt.Core.Mapper
 				.ForMember(dest => dest.SignalComments, opt => opt.MapFrom(src => src.PhantomSignalComments))
 				.ForMember(dest => dest.Resignals, opt => opt.MapFrom(src => src.PhantomResignals));
 
+			// Get Phantom ReSignal With All Details
 			CreateMap<PhantomResignal, ResignalDetailsDTO>()
 				.ForMember(dest => dest.Resignal, opt => opt.MapFrom(src => src))
 				.ForMember(dest => dest.PhantomSignal, opt => opt.MapFrom(src => src.PhantomSignal))
