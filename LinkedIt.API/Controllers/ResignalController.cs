@@ -1,0 +1,101 @@
+﻿using Azure;
+using LinkedIt.Core.DTOs.PhantomSignal;
+using LinkedIt.Services.ControllerServices.IControllerServices;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using System.Security.Claims;
+
+namespace LinkedIt.API.Controllers
+{
+	[Route("api/[controller]")]
+	[ApiController]
+	[Authorize]
+	public class ResignalController : ControllerBase
+	{
+		private readonly IResignalService _resignalService;
+		public ResignalController(IResignalService resignalService)
+		{
+			this._resignalService = resignalService;
+		}
+
+		[HttpGet("{reSignalId}")]
+		public async Task<IActionResult> GetPhantomReSignal([FromRoute] int reSignalId)
+		{
+			var response = await _resignalService.GetPhantomReSignalForUserAsync(reSignalId);
+
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				HttpStatusCode.BadRequest => BadRequest(response),
+				HttpStatusCode.NotFound => NotFound(response),
+				_ => Ok(response)
+			};
+		}
+
+		[HttpGet("inDetails/{reSignalId}")]
+		public async Task<IActionResult> GetPhantomReSignalInDetails([FromRoute] int reSignalId)
+		{
+			var response = await _resignalService.GetPhantomReSignalInDetailsForUserAsync(reSignalId);
+
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				HttpStatusCode.BadRequest => BadRequest(response),
+				HttpStatusCode.NotFound => NotFound(response),
+				_ => Ok(response)
+			};
+		}
+
+		//[HttpPost]
+		//public async Task<IActionResult> AddPhantomReSignal([FromBody] AddPhantomReSignalDTO addPhantomReSignalDto)
+		//{
+		//	var userId = User.FindFirst(ClaimTypes.NameIdentifier);
+
+		//	var response = await _resignalService.AddPhantomReSignalForUserAsync(userId, addPhantomReSignalDto);
+
+		//	return response.StatusCode switch
+		//	{
+		//		HttpStatusCode.Unauthorized => Unauthorized(response),
+		//		HttpStatusCode.BadRequest => BadRequest(response),
+		//		HttpStatusCode.NotFound => NotFound(response),
+		//		HttpStatusCode.Created => Created(response),
+		//		_ => Ok(response)
+		//	};
+		//}
+
+		//[HttpPut]
+		//public async Task<IActionResult> UpdatePhantomReSignal(
+		//	[FromBody] UpdatePhantomResignalDTO updatePhantomResignalDto)
+		//{
+		//	var userId = User.FindFirst(ClaimTypes.NameIdentifier);
+
+		//	var response = await _resignalService.UpdatePhantomReSignalForUserAsync(userId, updatePhantomResignalDto);
+
+		//	return response.StatusCode switch
+		//	{
+		//		HttpStatusCode.Unauthorized => Unauthorized(response),
+		//		HttpStatusCode.BadRequest => BadRequest(response),
+		//		HttpStatusCode.NotFound => NotFound(response),
+		//		_ => Ok(response)
+		//	};
+		//}
+
+		//[HttpDelete]
+		//public async Task<IActionResult> DeletePhantomReSignal([FromBody] Guid phantomResignalId)
+		//{
+		//	var userId = User.FindFirst(ClaimTypes.NameIdentifier);
+
+		//	var response = await _resignalService.DeletePhantomReSignalForUserAsync(userId, phantomResignalId);
+
+		//	return response.StatusCode switch
+		//	{
+		//		HttpStatusCode.Unauthorized => Unauthorized(response),
+		//		HttpStatusCode.BadRequest => BadRequest(response),
+		//		HttpStatusCode.NotFound => NotFound(response),
+		//		_ => Ok(response)
+		//	};
+		//}
+	}
+}
