@@ -68,5 +68,38 @@ namespace LinkedIt.DataAcess.Repository
 				throw;
 			}
 		}
+
+		public async Task<bool> IsResignalHisPropertyAsync(string userId, int reSignalId)
+		{
+			var reSignalExist = await _db.PhantomResignals.AnyAsync(r => r.Id == reSignalId && r.ApplicationUserId == userId);
+			return reSignalExist;
+		}
+
+		public async Task<bool> UpdatePhantomReSignalAsync(int reSignalId, AddResignalDTO updateResignalDto)
+		{
+			var existResignal = await _db.PhantomResignals.FirstOrDefaultAsync(r => r.Id == reSignalId);
+
+			await using var transaction = await _db.Database.BeginTransactionAsync();
+			try
+			{
+				existResignal.ResignalDate = DateTime.Now;
+				existResignal.ReSignalContent = updateResignalDto.ReSignalContent;
+
+				var success = await _db.SaveChangesAsync();
+				if (success < 1)
+				{
+					await transaction.RollbackAsync();
+					return false;
+				}
+
+				await transaction.CommitAsync();
+				return true;
+			}
+			catch
+			{
+				await transaction.RollbackAsync();
+				throw;
+			}
+		}
 	}
 }

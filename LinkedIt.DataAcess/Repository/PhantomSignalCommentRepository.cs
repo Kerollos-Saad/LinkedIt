@@ -65,10 +65,10 @@ namespace LinkedIt.DataAcess.Repository
 
 		public async Task<bool> IsCommentHisPropertyAsync(string userId, int commentId)
 		{
-			var exist = await _db.PhantomSignalsComments.CountAsync(c =>
+			var exist = await _db.PhantomSignalsComments.AnyAsync(c =>
 				c.Id == commentId && c.ApplicationUserId == userId);
 
-			return exist == 1;
+			return exist;
 		}
 
 		public async Task<SignalCommentDetailsDTO> GetCommentPhantomSignalV1Async(int commentId)

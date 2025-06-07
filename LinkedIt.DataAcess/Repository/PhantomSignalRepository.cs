@@ -25,14 +25,14 @@ namespace LinkedIt.DataAcess.Repository
 
 		public async Task<bool> IsSignalExist(Guid phantomSignalId)
 		{
-			var result = await _db.PhantomSignals.FindAsync(phantomSignalId);
-			return result != null;
+			var result = await _db.PhantomSignals.AnyAsync(s=>s.Id == phantomSignalId);
+			return result;
 		}
 
 		public async Task<bool> IsSignalHisPropertyAsync(string userId, Guid phantomSignalId)
 		{
-			var phantomSignal = await _db.PhantomSignals.FindAsync(phantomSignalId);
-			return phantomSignal != null && phantomSignal.ApplicationUserId == userId;
+			var phantomSignal = await _db.PhantomSignals.AnyAsync(s=>s.Id == phantomSignalId && s.ApplicationUserId == userId);
+			return phantomSignal;
 		}
 
 		public async Task<bool> UpdatePhantomSignalAsync(Guid phantomSignalId, AddPhantomSignalDTO phantomSignal)

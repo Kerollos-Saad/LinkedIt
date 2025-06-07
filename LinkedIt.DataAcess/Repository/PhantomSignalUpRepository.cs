@@ -21,11 +21,11 @@ namespace LinkedIt.DataAcess.Repository
 
 		public async Task<bool> IsSignalUpByUser(string userId, Guid phantomSignalId)
 		{
-			var up = await _db.PhantomSignalsUps.FirstOrDefaultAsync(u=>
+			var up = await _db.PhantomSignalsUps.AnyAsync(u=>
 				u.ApplicationUserId == userId && 
 				u.PhantomSignalId == phantomSignalId);
 
-			return up != null;
+			return up;
 		}
 
 

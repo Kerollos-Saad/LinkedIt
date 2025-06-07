@@ -5,6 +5,7 @@ using LinkedIt.DataAcess.Repository.IRepository;
 using LinkedIt.Services.ControllerServices.IControllerServices;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -68,6 +69,32 @@ namespace LinkedIt.Services.ControllerServices
 				return APIResponse.Fail(new List<string> { "Failed To ReSignal This Signal!" });
 
 			response.SetResponseInfo(HttpStatusCode.Created, null, reSignalId, true);
+			return response;
+		}
+
+		public async Task<APIResponse> UpdatePhantomReSignalForUserAsync(string userId, int reSignalId, AddResignalDTO updateResignalDto)
+		{
+			var response = new APIResponse();
+
+			if (String.IsNullOrEmpty(userId))
+				return APIResponse.Fail(new List<string> { "UnAuthorize" }, HttpStatusCode.Unauthorized);
+
+			var userExist = await _db.User.IsExistAsync(userId);
+			var reSignalExist = await _db.PhantomResignal.IsExistAsync(reSignalId);
+			if (!userExist)
+				return APIResponse.Fail(new List<string> { "UnAuthorize, User Does Not Exist" }, HttpStatusCode.NotFound);
+			if (!reSignalExist)
+				return APIResponse.Fail(new List<string> { "UnAuthorize, Signal Does Not Exist" }, HttpStatusCode.NotFound);
+
+			var isReSignalHisProperty = await _db.PhantomResignal.IsResignalHisPropertyAsync(userId, reSignalId);
+			if (!isReSignalHisProperty)
+				return APIResponse.Fail(new List<string> { "UnAuthorize, not Your ReSignal!" }, HttpStatusCode.Unauthorized);
+
+			var success = await _db.PhantomResignal.UpdatePhantomReSignalAsync(reSignalId, updateResignalDto);
+			if(!success)
+				return APIResponse.Fail(new List<string> { "Failed To Update ReSignal!" });
+
+			response.SetResponseInfo(HttpStatusCode.OK, null, reSignalId, true);
 			return response;
 		}
 	}

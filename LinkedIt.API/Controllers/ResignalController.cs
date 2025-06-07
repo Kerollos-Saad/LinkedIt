@@ -35,7 +35,7 @@ namespace LinkedIt.API.Controllers
 			};
 		}
 
-		[HttpGet("inDetails/{reSignalId}")]
+		[HttpGet("{reSignalId}/inDetails")]
 		public async Task<IActionResult> GetPhantomReSignalInDetails([FromRoute] int reSignalId)
 		{
 			var response = await _resignalService.GetPhantomReSignalInDetailsForUserAsync(reSignalId);
@@ -68,22 +68,21 @@ namespace LinkedIt.API.Controllers
 			};
 		}
 
-		//[HttpPut]
-		//public async Task<IActionResult> UpdatePhantomReSignal(
-		//	[FromBody] UpdatePhantomResignalDTO updatePhantomResignalDto)
-		//{
-		//	var userId = User.FindFirst(ClaimTypes.NameIdentifier);
+		[HttpPut("{reSignalId}")]
+		public async Task<IActionResult> UpdatePhantomReSignal([FromRoute] int reSignalId, [FromBody] AddResignalDTO updatePhantomResignalDto)
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		//	var response = await _resignalService.UpdatePhantomReSignalForUserAsync(userId, updatePhantomResignalDto);
+			var response = await _resignalService.UpdatePhantomReSignalForUserAsync(userId, reSignalId, updatePhantomResignalDto);
 
-		//	return response.StatusCode switch
-		//	{
-		//		HttpStatusCode.Unauthorized => Unauthorized(response),
-		//		HttpStatusCode.BadRequest => BadRequest(response),
-		//		HttpStatusCode.NotFound => NotFound(response),
-		//		_ => Ok(response)
-		//	};
-		//}
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				HttpStatusCode.BadRequest => BadRequest(response),
+				HttpStatusCode.NotFound => NotFound(response),
+				_ => Ok(response)
+			};
+		}
 
 		//[HttpDelete]
 		//public async Task<IActionResult> DeletePhantomReSignal([FromBody] Guid phantomResignalId)
