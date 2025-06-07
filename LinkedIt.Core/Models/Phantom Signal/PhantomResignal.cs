@@ -14,6 +14,7 @@ namespace LinkedIt.Core.Models.Phantom_Signal
 		[Key]
 		public int Id { get; set; }
 		public DateTime ResignalDate { get; set; } = DateTime.Now;
+		public String? ReSignalContent { get; set; }
 
 		[ForeignKey("PhantomSignal")]
 		public Guid PhantomSignalId { get; set; }
