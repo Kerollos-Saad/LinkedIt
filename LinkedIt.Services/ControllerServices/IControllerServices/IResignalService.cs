@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LinkedIt.Core.DTOs.PhantomResignal;
 using LinkedIt.Core.Response;
 
 namespace LinkedIt.Services.ControllerServices.IControllerServices
@@ -11,5 +12,6 @@ namespace LinkedIt.Services.ControllerServices.IControllerServices
 	{
 		Task<APIResponse> GetPhantomReSignalForUserAsync(int phantomResignalId);
 		Task<APIResponse> GetPhantomReSignalInDetailsForUserAsync(int phantomResignalId);
+		Task<APIResponse> AddPhantomReSignalForUserAsync(String userId, AddResignalDTO addResignalDto);
 	}
 }

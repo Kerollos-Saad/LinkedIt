@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Claims;
+using LinkedIt.Core.DTOs.PhantomResignal;
 
 namespace LinkedIt.API.Controllers
 {
@@ -48,22 +49,24 @@ namespace LinkedIt.API.Controllers
 			};
 		}
 
-		//[HttpPost]
-		//public async Task<IActionResult> AddPhantomReSignal([FromBody] AddPhantomReSignalDTO addPhantomReSignalDto)
-		//{
-		//	var userId = User.FindFirst(ClaimTypes.NameIdentifier);
+		[HttpPost]
+		public async Task<IActionResult> AddPhantomReSignal([FromBody] AddResignalDTO addPhantomReSignalDto)
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		//	var response = await _resignalService.AddPhantomReSignalForUserAsync(userId, addPhantomReSignalDto);
+			var response = await _resignalService.AddPhantomReSignalForUserAsync(userId, addPhantomReSignalDto);
 
-		//	return response.StatusCode switch
-		//	{
-		//		HttpStatusCode.Unauthorized => Unauthorized(response),
-		//		HttpStatusCode.BadRequest => BadRequest(response),
-		//		HttpStatusCode.NotFound => NotFound(response),
-		//		HttpStatusCode.Created => Created(response),
-		//		_ => Ok(response)
-		//	};
-		//}
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				HttpStatusCode.BadRequest => BadRequest(response),
+				HttpStatusCode.NotFound => NotFound(response),
+				HttpStatusCode.Created => Created(
+					uri: $"/api/resignal/{response.Result}",
+					value: response),
+				_ => Ok(response)
+			};
+		}
 
 		//[HttpPut]
 		//public async Task<IActionResult> UpdatePhantomReSignal(

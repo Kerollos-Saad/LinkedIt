@@ -1,12 +1,14 @@
-﻿using System;
+﻿using LinkedIt.Core.DTOs.PhantomResignal;
+using LinkedIt.Core.DTOs.SignalComment;
+using LinkedIt.Core.Response;
+using LinkedIt.DataAcess.Repository.IRepository;
+using LinkedIt.Services.ControllerServices.IControllerServices;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using LinkedIt.Core.Response;
-using LinkedIt.DataAcess.Repository.IRepository;
-using LinkedIt.Services.ControllerServices.IControllerServices;
 
 namespace LinkedIt.Services.ControllerServices
 {
@@ -42,6 +44,30 @@ namespace LinkedIt.Services.ControllerServices
 			var reSignalDetailsDTO = await _db.PhantomResignal.GetPhantomReSignalInDetailsAsync(phantomResignalId);
 
 			response.SetResponseInfo(HttpStatusCode.OK, null, reSignalDetailsDTO, true);
+			return response;
+		}
+
+		public async Task<APIResponse> AddPhantomReSignalForUserAsync(string userId, AddResignalDTO addResignalDto)
+		{
+			var response = new APIResponse();
+
+			if (String.IsNullOrEmpty(userId))
+				return APIResponse.Fail(new List<string> { "UnAuthorize" }, HttpStatusCode.Unauthorized);
+			if (addResignalDto.PhantomSignalId == Guid.Empty)
+				return APIResponse.Fail(new List<string> { "UnValid Phantom Signal Id" });
+
+			var userExist = await _db.User.IsExistAsync(userId);
+			var signalExist = await _db.PhantomSignal.IsExistAsync(addResignalDto.PhantomSignalId);
+			if (!userExist)
+				return APIResponse.Fail(new List<string> { "UnAuthorize, User Does Not Exist" }, HttpStatusCode.NotFound);
+			if (!signalExist)
+				return APIResponse.Fail(new List<string> { "UnAuthorize, Signal Does Not Exist" }, HttpStatusCode.NotFound);
+
+			var reSignalId = await _db.PhantomResignal.AddPhantomReSignalAsync(userId, addResignalDto);
+			if(reSignalId == 0)
+				return APIResponse.Fail(new List<string> { "Failed To ReSignal This Signal!" });
+
+			response.SetResponseInfo(HttpStatusCode.Created, null, reSignalId, true);
 			return response;
 		}
 	}
