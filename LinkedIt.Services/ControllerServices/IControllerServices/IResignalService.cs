@@ -12,6 +12,6 @@ namespace LinkedIt.Services.ControllerServices.IControllerServices
 	{
 		Task<APIResponse> GetPhantomReSignalForUserAsync(int phantomResignalId);
 		Task<APIResponse> GetPhantomReSignalInDetailsForUserAsync(int phantomResignalId);
-		Task<APIResponse> AddPhantomReSignalForUserAsync(String userId, AddResignalDTO addResignalDto);
+		Task<APIResponse> AddPhantomReSignalForUserAsync(String userId, Guid phantomSignalId, AddResignalDTO addResignalDto);
 	}
 }

@@ -11,6 +11,6 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 	public interface IPhantomResignalRepository : IGenericRepository<PhantomResignal>
 	{
 		Task<ResignalDetailsDTO> GetPhantomReSignalInDetailsAsync(int reSignalId);
-		Task<int> AddPhantomReSignalAsync(String userId, AddResignalDTO addResignalDto);
+		Task<int> AddPhantomReSignalAsync(String userId, Guid phantomSignalId, AddResignalDTO addResignalDto);
 	}
 }

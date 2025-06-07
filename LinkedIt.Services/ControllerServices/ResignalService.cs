@@ -47,23 +47,23 @@ namespace LinkedIt.Services.ControllerServices
 			return response;
 		}
 
-		public async Task<APIResponse> AddPhantomReSignalForUserAsync(string userId, AddResignalDTO addResignalDto)
+		public async Task<APIResponse> AddPhantomReSignalForUserAsync(string userId, Guid phantomSignalId, AddResignalDTO addResignalDto)
 		{
 			var response = new APIResponse();
 
 			if (String.IsNullOrEmpty(userId))
 				return APIResponse.Fail(new List<string> { "UnAuthorize" }, HttpStatusCode.Unauthorized);
-			if (addResignalDto.PhantomSignalId == Guid.Empty)
+			if (phantomSignalId == Guid.Empty)
 				return APIResponse.Fail(new List<string> { "UnValid Phantom Signal Id" });
 
 			var userExist = await _db.User.IsExistAsync(userId);
-			var signalExist = await _db.PhantomSignal.IsExistAsync(addResignalDto.PhantomSignalId);
+			var signalExist = await _db.PhantomSignal.IsExistAsync(phantomSignalId);
 			if (!userExist)
 				return APIResponse.Fail(new List<string> { "UnAuthorize, User Does Not Exist" }, HttpStatusCode.NotFound);
 			if (!signalExist)
 				return APIResponse.Fail(new List<string> { "UnAuthorize, Signal Does Not Exist" }, HttpStatusCode.NotFound);
 
-			var reSignalId = await _db.PhantomResignal.AddPhantomReSignalAsync(userId, addResignalDto);
+			var reSignalId = await _db.PhantomResignal.AddPhantomReSignalAsync(userId, phantomSignalId, addResignalDto);
 			if(reSignalId == 0)
 				return APIResponse.Fail(new List<string> { "Failed To ReSignal This Signal!" });
 

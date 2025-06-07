@@ -49,12 +49,12 @@ namespace LinkedIt.API.Controllers
 			};
 		}
 
-		[HttpPost]
-		public async Task<IActionResult> AddPhantomReSignal([FromBody] AddResignalDTO addPhantomReSignalDto)
+		[HttpPost("{phantomSignalId}")]
+		public async Task<IActionResult> AddPhantomReSignal([FromRoute] Guid phantomSignalId, [FromBody] AddResignalDTO addPhantomReSignalDto)
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			var response = await _resignalService.AddPhantomReSignalForUserAsync(userId, addPhantomReSignalDto);
+			var response = await _resignalService.AddPhantomReSignalForUserAsync(userId, phantomSignalId, addPhantomReSignalDto);
 
 			return response.StatusCode switch
 			{

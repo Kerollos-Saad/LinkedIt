@@ -9,6 +9,5 @@ namespace LinkedIt.Core.DTOs.PhantomResignal
 	public class AddResignalDTO
 	{
 		public String? ReSignalContent { get; set; }
-		public Guid PhantomSignalId { get; set; }
 	}
 }

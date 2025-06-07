@@ -33,17 +33,17 @@ namespace LinkedIt.DataAcess.Repository
 			return resignalDetailsDto;
 		}
 
-		public async Task<int> AddPhantomReSignalAsync(string userId, AddResignalDTO addResignalDto)
+		public async Task<int> AddPhantomReSignalAsync(string userId, Guid phantomSignalId, AddResignalDTO addResignalDto)
 		{
 			var signal = await _db.PhantomSignals
-				.FirstOrDefaultAsync(s => s.Id == addResignalDto.PhantomSignalId);
+				.FirstOrDefaultAsync(s => s.Id == phantomSignalId);
 
 			var reSignal = new PhantomResignal
 			{
 				ReSignalContent = addResignalDto.ReSignalContent,
 				ResignalDate = DateTime.Now,
 				ApplicationUserId = userId,
-				PhantomSignalId = addResignalDto.PhantomSignalId
+				PhantomSignalId = phantomSignalId
 			};
 
 			await using var transaction = await _db.Database.BeginTransactionAsync();
