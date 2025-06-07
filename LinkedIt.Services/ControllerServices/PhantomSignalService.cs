@@ -84,6 +84,28 @@ namespace LinkedIt.Services.ControllerServices
 			return response;
 		}
 
+		public async Task<APIResponse> GetPhantomSignalDetailsForUserAsync(string userId, Guid phantomSignalId)
+		{
+			var response = new APIResponse();
+
+			if (String.IsNullOrEmpty(userId))
+				return APIResponse.Fail(new List<string> { "UnAuthorize" }, HttpStatusCode.Unauthorized);
+			if (phantomSignalId == Guid.Empty)
+				return APIResponse.Fail(new List<string> { "UnValid Phantom Signal Id" });
+
+			var userExist = await _db.User.IsExistAsync(userId);
+			var signalExist = await _db.PhantomSignal.IsExistAsync(phantomSignalId);
+			if (!userExist)
+				return APIResponse.Fail(new List<string> { "User Does Not Exist" }, HttpStatusCode.NotFound);
+			if (!signalExist)
+				return APIResponse.Fail(new List<string> { "Signal Does Not Exist" }, HttpStatusCode.NotFound);
+
+			var signalDetailsDto = await _db.PhantomSignal.GetPhantomSignalDetailsAsync(userId, phantomSignalId);
+
+			response.SetResponseInfo(HttpStatusCode.OK, null, signalDetailsDto, true);
+			return response;
+		}
+
 		public async Task<APIResponse> RemovePhantomSignalAsync(String userId, Guid phantomSignalId)
 		{
 			var response = new APIResponse();
@@ -129,10 +151,10 @@ namespace LinkedIt.Services.ControllerServices
 
 			var userExist = await _db.User.IsExistAsync(userId);
 			var signalExist = await _db.PhantomSignal.IsExistAsync(phantomSignalId);
-			if(!userExist)
-				return APIResponse.Fail(new List<string> { "UnAuthorize, User Does Not Exist" });
-			if(!signalExist)
-				return APIResponse.Fail(new List<string> { "UnAuthorize, Signal Does Not Exist" });
+			if (!userExist)
+				return APIResponse.Fail(new List<string> { "User Does Not Exist" }, HttpStatusCode.NotFound);
+			if (!signalExist)
+				return APIResponse.Fail(new List<string> { "Signal Does Not Exist" }, HttpStatusCode.NotFound);
 
 			var signalProperty = await _db.PhantomSignal.IsSignalHisPropertyAsync(userId, phantomSignalId);
 			if(!signalProperty)

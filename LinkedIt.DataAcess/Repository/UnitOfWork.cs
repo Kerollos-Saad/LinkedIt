@@ -40,7 +40,7 @@ namespace LinkedIt.DataAcess.Repository
 			
 			User = new UserRepository(db, userManager, roleManager, config, mapper);
 			LinkUser = new LinkUserRepository(db);
-			PhantomSignal = new PhantomSignalRepository(db);
+			PhantomSignal = new PhantomSignalRepository(db, mapper);
 			PhantomSignalUp = new PhantomSignalUpRepository(db);
 			PhantomSignalDown = new PhantomSignalDownRepository(db);
 			PhantomSignalComment = new PhantomSignalCommentRepository(db, mapper);

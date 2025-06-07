@@ -13,5 +13,6 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 		Task<bool> IsSignalExist(Guid phantomSignalId);
 		Task<bool> IsSignalHisPropertyAsync(String userId, Guid phantomSignalId);
 		Task<bool> UpdatePhantomSignalAsync(Guid phantomSignalId, AddPhantomSignalDTO phantomSignal);
+		Task<PhantomSignalDetailsDTO> GetPhantomSignalDetailsAsync(String userId, Guid phantomSignalId);
 	}
 }
