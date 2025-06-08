@@ -10,9 +10,10 @@ namespace LinkedIt.Services.ControllerServices.IControllerServices
 {
 	public interface IResignalService
 	{
-		Task<APIResponse> GetPhantomReSignalForUserAsync(int phantomResignalId);
-		Task<APIResponse> GetPhantomReSignalInDetailsForUserAsync(int phantomResignalId);
+		Task<APIResponse> GetPhantomReSignalForUserAsync(int resignalId);
+		Task<APIResponse> GetPhantomReSignalInDetailsForUserAsync(int resignalId);
 		Task<APIResponse> AddPhantomReSignalForUserAsync(String userId, Guid phantomSignalId, AddResignalDTO addResignalDto);
 		Task<APIResponse> UpdatePhantomReSignalForUserAsync(String userId, int reSignalId, AddResignalDTO updateResignalDto);
+		Task<APIResponse> DeletePhantomReSignalForUserAsync(String userId, int reSignalId);
 	}
 }

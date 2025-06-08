@@ -84,20 +84,20 @@ namespace LinkedIt.API.Controllers
 			};
 		}
 
-		//[HttpDelete]
-		//public async Task<IActionResult> DeletePhantomReSignal([FromBody] Guid phantomResignalId)
-		//{
-		//	var userId = User.FindFirst(ClaimTypes.NameIdentifier);
+		[HttpDelete("{resignalId}")]
+		public async Task<IActionResult> DeletePhantomReSignal([FromRoute] int resignalId)
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		//	var response = await _resignalService.DeletePhantomReSignalForUserAsync(userId, phantomResignalId);
+			var response = await _resignalService.DeletePhantomReSignalForUserAsync(userId, resignalId);
 
-		//	return response.StatusCode switch
-		//	{
-		//		HttpStatusCode.Unauthorized => Unauthorized(response),
-		//		HttpStatusCode.BadRequest => BadRequest(response),
-		//		HttpStatusCode.NotFound => NotFound(response),
-		//		_ => Ok(response)
-		//	};
-		//}
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				HttpStatusCode.BadRequest => BadRequest(response),
+				HttpStatusCode.NotFound => NotFound(response),
+				_ => Ok(response)
+			};
+		}
 	}
 }

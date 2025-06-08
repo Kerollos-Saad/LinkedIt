@@ -101,5 +101,30 @@ namespace LinkedIt.DataAcess.Repository
 				throw;
 			}
 		}
+
+		public async Task<bool> DeletePhantomReSignalAsync(int reSignalId)
+		{
+			var existResignal = await _db.PhantomResignals.FirstOrDefaultAsync(r => r.Id == reSignalId);
+
+			await using var transaction = await _db.Database.BeginTransactionAsync();
+			try
+			{
+				_db.Remove(existResignal!);
+				var success = await _db.SaveChangesAsync();
+				if (success < 1)
+				{
+					await transaction.RollbackAsync();
+					return false;
+				}
+
+				await transaction.CommitAsync();
+				return true;
+			}
+			catch
+			{
+				await transaction.RollbackAsync();
+				throw;
+			}
+		}
 	}
 }

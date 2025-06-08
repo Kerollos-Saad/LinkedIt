@@ -21,11 +21,11 @@ namespace LinkedIt.Services.ControllerServices
 			this._db = db;
 		}
 
-		public async Task<APIResponse> GetPhantomReSignalForUserAsync(int phantomResignalId)
+		public async Task<APIResponse> GetPhantomReSignalForUserAsync(int resignalId)
 		{
 			var response = new APIResponse();
 
-			var reSignal = await _db.PhantomResignal.FindAsync(r => r.Id == phantomResignalId);
+			var reSignal = await _db.PhantomResignal.FindAsync(r => r.Id == resignalId);
 
 			if (reSignal == null)
 				return APIResponse.Fail(new List<string>{"ReSignal Not Found!"}, HttpStatusCode.NotFound);
@@ -34,15 +34,15 @@ namespace LinkedIt.Services.ControllerServices
 			return response;
 		}
 
-		public async Task<APIResponse> GetPhantomReSignalInDetailsForUserAsync(int phantomResignalId)
+		public async Task<APIResponse> GetPhantomReSignalInDetailsForUserAsync(int resignalId)
 		{
 			var response = new APIResponse();
 
-			var reSignalExist = await _db.PhantomResignal.IsExistAsync(phantomResignalId);
+			var reSignalExist = await _db.PhantomResignal.IsExistAsync(resignalId);
 			if(!reSignalExist)
 				return APIResponse.Fail(new List<string> { "ReSignal Not Found!" }, HttpStatusCode.NotFound);
 
-			var reSignalDetailsDTO = await _db.PhantomResignal.GetPhantomReSignalInDetailsAsync(phantomResignalId);
+			var reSignalDetailsDTO = await _db.PhantomResignal.GetPhantomReSignalInDetailsAsync(resignalId);
 
 			response.SetResponseInfo(HttpStatusCode.OK, null, reSignalDetailsDTO, true);
 			return response;
@@ -60,9 +60,9 @@ namespace LinkedIt.Services.ControllerServices
 			var userExist = await _db.User.IsExistAsync(userId);
 			var signalExist = await _db.PhantomSignal.IsExistAsync(phantomSignalId);
 			if (!userExist)
-				return APIResponse.Fail(new List<string> { "UnAuthorize, User Does Not Exist" }, HttpStatusCode.NotFound);
+				return APIResponse.Fail(new List<string> { "User Does Not Exist" }, HttpStatusCode.NotFound);
 			if (!signalExist)
-				return APIResponse.Fail(new List<string> { "UnAuthorize, Signal Does Not Exist" }, HttpStatusCode.NotFound);
+				return APIResponse.Fail(new List<string> { "Signal Does Not Exist" }, HttpStatusCode.NotFound);
 
 			var reSignalId = await _db.PhantomResignal.AddPhantomReSignalAsync(userId, phantomSignalId, addResignalDto);
 			if(reSignalId == 0)
@@ -82,9 +82,9 @@ namespace LinkedIt.Services.ControllerServices
 			var userExist = await _db.User.IsExistAsync(userId);
 			var reSignalExist = await _db.PhantomResignal.IsExistAsync(reSignalId);
 			if (!userExist)
-				return APIResponse.Fail(new List<string> { "UnAuthorize, User Does Not Exist" }, HttpStatusCode.NotFound);
+				return APIResponse.Fail(new List<string> { "User Does Not Exist" }, HttpStatusCode.NotFound);
 			if (!reSignalExist)
-				return APIResponse.Fail(new List<string> { "UnAuthorize, Signal Does Not Exist" }, HttpStatusCode.NotFound);
+				return APIResponse.Fail(new List<string> { "Signal Does Not Exist" }, HttpStatusCode.NotFound);
 
 			var isReSignalHisProperty = await _db.PhantomResignal.IsResignalHisPropertyAsync(userId, reSignalId);
 			if (!isReSignalHisProperty)
@@ -93,6 +93,32 @@ namespace LinkedIt.Services.ControllerServices
 			var success = await _db.PhantomResignal.UpdatePhantomReSignalAsync(reSignalId, updateResignalDto);
 			if(!success)
 				return APIResponse.Fail(new List<string> { "Failed To Update ReSignal!" });
+
+			response.SetResponseInfo(HttpStatusCode.OK, null, reSignalId, true);
+			return response;
+		}
+
+		public async Task<APIResponse> DeletePhantomReSignalForUserAsync(string userId, int reSignalId)
+		{
+			var response = new APIResponse();
+
+			if (String.IsNullOrEmpty(userId))
+				return APIResponse.Fail(new List<string> { "UnAuthorize" }, HttpStatusCode.Unauthorized);
+
+			var userExist = await _db.User.IsExistAsync(userId);
+			var reSignalExist = await _db.PhantomResignal.IsExistAsync(reSignalId);
+			if (!userExist)
+				return APIResponse.Fail(new List<string> { "User Does Not Exist" }, HttpStatusCode.NotFound);
+			if (!reSignalExist)
+				return APIResponse.Fail(new List<string> { "ReSignal Does Not Exist" }, HttpStatusCode.NotFound);
+
+			var isReSignalHisProperty = await _db.PhantomResignal.IsResignalHisPropertyAsync(userId, reSignalId);
+			if (!isReSignalHisProperty)
+				return APIResponse.Fail(new List<string> { "UnAuthorize, not Your ReSignal!" }, HttpStatusCode.Unauthorized);
+
+			var success = await _db.PhantomResignal.DeletePhantomReSignalAsync(reSignalId);
+			if(!success)
+				return APIResponse.Fail(new List<string> { "Failed To Delete ReSignal!" });
 
 			response.SetResponseInfo(HttpStatusCode.OK, null, reSignalId, true);
 			return response;
