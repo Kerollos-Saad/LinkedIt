@@ -20,7 +20,7 @@ namespace LinkedIt.API.Controllers
 			this._phantomSignalService = phantomSignalService;
 		}
 
-		[HttpGet("InDetails/{phantomSignalId}")]
+		[HttpGet("{phantomSignalId}/InDetails")]
 		public async Task<IActionResult> GetPhantomSignalWithDetails([FromRoute] Guid phantomSignalId)
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

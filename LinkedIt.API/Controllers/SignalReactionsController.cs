@@ -18,7 +18,7 @@ namespace LinkedIt.API.Controllers
 			_signalReactionsService = signalReactionsService;
 		}
 
-		[HttpPost("UpSignal/{phantomSignalId}"), Authorize]
+		[HttpPost("{phantomSignalId}/UpSignal"), Authorize]
 		public async Task<IActionResult> UpPhantomSignal([FromRoute] Guid phantomSignalId)
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -33,7 +33,7 @@ namespace LinkedIt.API.Controllers
 			};
 		}
 
-		[HttpPost("DownSignal/{phantomSignalId}"), Authorize]
+		[HttpPost("{phantomSignalId}/DownSignal"), Authorize]
 		public async Task<IActionResult> DownPhantomSignal([FromRoute] Guid phantomSignalId)
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -61,7 +61,7 @@ namespace LinkedIt.API.Controllers
 			};
 		}
 
-		[HttpGet("UpVoteUsers/{phantomSignalId}")]
+		[HttpGet("{phantomSignalId}/UpVoteUsers")]
 		public async Task<IActionResult> GetPhantomSignalUpUsers([FromRoute] Guid phantomSignalId)
 		{
 			var response = await _signalReactionsService.GetPhantomSignalUpUsersForUserAsync(phantomSignalId);
@@ -74,7 +74,7 @@ namespace LinkedIt.API.Controllers
 			};
 		}
 
-		[HttpGet("DownVoteUsers/{phantomSignalId}")]
+		[HttpGet("{phantomSignalId}/DownVoteUsers")]
 		public async Task<IActionResult> GetPhantomSignalDownUsers([FromRoute] Guid phantomSignalId)
 		{
 			var response = await _signalReactionsService.GetPhantomSignalDownUsersForUserAsync(phantomSignalId);

@@ -51,7 +51,7 @@ namespace LinkedIt.API.Controllers
 			};
 		}
 
-		[HttpGet("V1/{commentId}")]
+		[HttpGet("{commentId}/V1")]
 		public async Task<IActionResult> GetCommentPhantomSignal([FromRoute] int commentId)
 		{
 			var response = await _signalCommentService.GetCommentPhantomSignalForUserV1Async(commentId);
@@ -65,7 +65,7 @@ namespace LinkedIt.API.Controllers
 			};
 		}
 
-		[HttpGet("V2/{commentId}")]
+		[HttpGet("{commentId}/V2")]
 		public async Task<IActionResult> GetCommentPhantomSignalV2([FromRoute] int commentId)
 		{
 			var response = await _signalCommentService.GetCommentPhantomSignalForUserV2Async(commentId);
@@ -79,7 +79,7 @@ namespace LinkedIt.API.Controllers
 			};
 		}
 
-		[HttpGet("V3/{commentId}")]
+		[HttpGet("{commentId}/V3")]
 		public async Task<IActionResult> GetCommentPhantomSignalV3([FromRoute] int commentId)
 		{
 			var response = await _signalCommentService.GetCommentPhantomSignalForUserV3Async(commentId);
