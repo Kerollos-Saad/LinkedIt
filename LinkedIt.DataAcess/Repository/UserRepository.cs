@@ -130,7 +130,7 @@ namespace LinkedIt.DataAcess.Repository
 			}
 			catch (Exception ex)
 			{
-				userDTO.ErrorMessages = new List<string> { "An unexpected error occurred while registering the user." };
+				userDTO.ErrorMessages = new List<string> { $"An unexpected error occurred while registering the user. {ex}" };
 			}
 
 			return userDTO;

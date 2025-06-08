@@ -13,7 +13,6 @@ namespace LinkedIt.Services.ControllerServices
 	public class SignalReactionsService : ISignalReactionsService
 	{
 		private readonly IUnitOfWork _db;
-		private ISignalReactionsService _signalReactionsServiceImplementation;
 
 		public SignalReactionsService(IUnitOfWork db)
 		{
