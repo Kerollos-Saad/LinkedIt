@@ -11,16 +11,16 @@ namespace LinkedIt.Core.Response
 	{
 		public HttpStatusCode StatusCode { get; set; }
 		public bool IsSuccess { get; set; } = true;
-		public List<string> ErrorMessages { get; set; }
-		public object Result { get; set; }
+		public List<string>? ErrorMessages { get; set; }
+		public object? Result { get; set; }
 
-		public void SetResponseInfo(HttpStatusCode statusCode, List<string> errorMessages, object result,
+		public void SetResponseInfo(HttpStatusCode statusCode, List<string>? errorMessages, object? result,
 			bool isSuccess = true)
 		{
 			StatusCode = statusCode;
 			IsSuccess = isSuccess;
 			ErrorMessages = errorMessages ?? new List<string>();
-			Result = result;
+			Result = result ?? new object();
 		}
 
 		public static APIResponse Success(object? result = null, HttpStatusCode code = HttpStatusCode.OK) =>
