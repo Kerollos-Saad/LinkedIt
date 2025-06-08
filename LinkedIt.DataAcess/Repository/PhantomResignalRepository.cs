@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LinkedIt.DataAcess.Repository
 {
+	// handling repository code without repeated null checks.
 	public class PhantomResignalRepository : GenericRepository<PhantomResignal>, IPhantomResignalRepository
 	{
 		private readonly ApplicationDbContext _db;
@@ -30,7 +31,7 @@ namespace LinkedIt.DataAcess.Repository
 				.ProjectTo<ResignalDetailsDTO>(_mapper.ConfigurationProvider)
 				.FirstOrDefaultAsync();
 
-			return resignalDetailsDto;
+			return resignalDetailsDto!;
 		}
 
 		public async Task<int> AddPhantomReSignalAsync(string userId, Guid phantomSignalId, AddResignalDTO addResignalDto)
@@ -50,7 +51,7 @@ namespace LinkedIt.DataAcess.Repository
 			try
 			{
 				await _db.PhantomResignals.AddAsync(reSignal);
-				signal.ResignalCount++;
+				signal!.ResignalCount++;
 
 				var success = await _db.SaveChangesAsync();
 				if (success < 1)
@@ -82,7 +83,7 @@ namespace LinkedIt.DataAcess.Repository
 			await using var transaction = await _db.Database.BeginTransactionAsync();
 			try
 			{
-				existResignal.ResignalDate = DateTime.Now;
+				existResignal!.ResignalDate = DateTime.Now;
 				existResignal.ReSignalContent = updateResignalDto.ReSignalContent;
 
 				var success = await _db.SaveChangesAsync();
