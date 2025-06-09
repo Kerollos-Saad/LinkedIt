@@ -104,7 +104,35 @@ namespace LinkedIt.Services.ControllerServices
 			if (!result.IsSuccess)
 				return APIResponse.Fail(new List<string> { $"{result.ErrorMessage}" });
 
-			response.SetResponseInfo(HttpStatusCode.Created, null, result.Data, true);
+			response.SetResponseInfo(HttpStatusCode.Created, null, new { WhisperId = result.Data }, true);
+			return response;
+		}
+
+		public async Task<APIResponse> AddWhisperWithNewPhantomSignalForUserAsync(string senderId, AddWhisperWithNewPhantomSignalDTO addWhisperDto)
+		{
+			var response = new APIResponse();
+
+			if (String.IsNullOrEmpty(senderId))
+				return APIResponse.Fail(new List<string> { "UnAuthorize" }, HttpStatusCode.Unauthorized);
+
+			var userExist = await _db.User.IsExistAsync(senderId);
+			if (!userExist)
+				return APIResponse.Fail(new List<string> { "User Does Not Exist" }, HttpStatusCode.NotFound);
+
+			// Check Users Are Connected
+			var usersAreLinked =
+				await _db.LinkUser.IsAlreadyLinking(senderId, addWhisperDto.ReceiverId)
+				&&
+				await _db.LinkUser.IsAlreadyLinking(addWhisperDto.ReceiverId, senderId);
+
+			if (!usersAreLinked)
+				return APIResponse.Fail(new List<string> { "You Can't Send Whisper To This User, Not linked" }, HttpStatusCode.Unauthorized);
+
+			var result = await _db.Whisper.AddWhisperWithNewPhantomSignalAsync(senderId, addWhisperDto);
+			if(!result.IsSuccess)
+				return APIResponse.Fail(new List<string> { $"{result.ErrorMessage}" });
+
+			response.SetResponseInfo(HttpStatusCode.Created, null, new { WhisperId = result.Data}, true);
 			return response;
 		}
 	}

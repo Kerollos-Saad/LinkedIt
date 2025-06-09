@@ -14,5 +14,6 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 		Task<bool> IsWhisperHisPropertyAsync(String userId, Guid whisperId);
 		Task<WhisperDetailsDTO> GetWhisperDetailsAsync(Guid whisperId);
 		Task<OperationResult<Guid>> AddWhisperWithExistPhantomSignalAsync(String senderId, AddWhisperWithExistPhantomSignalDTO addWhisperDto);
+		Task<OperationResult<Guid>> AddWhisperWithNewPhantomSignalAsync(String senderId, AddWhisperWithNewPhantomSignalDTO addWhisperDto);
 	}
 }

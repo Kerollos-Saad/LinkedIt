@@ -70,21 +70,22 @@ namespace LinkedIt.API.Controllers
 			};
 		}
 
-		//[HttpPost]
-		//public async Task<IActionResult> AddWhisperWithNewPhantomSignal(AddWhisperWithNewPhantomSignalDTO addWhisperWithNewPhantomSignalDto)
-		//{
-		//	var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+		[HttpPost("NewSignal")]
+		public async Task<IActionResult> AddWhisperWithNewPhantomSignal([FromBody] AddWhisperWithNewPhantomSignalDTO addWhisperWithNewPhantomSignalDto)
+		{
+			var senderId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		//	var response = await _whisperService.AddWhisperWithNewPhantomSignalForUserAsync(userId, addWhisperWithNewPhantomSignalDto);
+			var response = await _whisperService.AddWhisperWithNewPhantomSignalForUserAsync(senderId, addWhisperWithNewPhantomSignalDto);
 
-		//	return response.StatusCode switch
-		//	{
-		//		HttpStatusCode.Unauthorized => Unauthorized(response),
-		//		HttpStatusCode.BadRequest => BadRequest(response),
-		//		HttpStatusCode.NotFound => NotFound(response),
-		//		_ => Ok(response)
-		//	};
-		//}
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				HttpStatusCode.BadRequest => BadRequest(response),
+				HttpStatusCode.NotFound => NotFound(response),
+				_ => Ok(response)
+			};
+			return Ok();
+		}
 
 		//[HttpPost("{whisperId}/Status")]
 		//public async Task<IActionResult> AddWhisperStatus([FromRoute] Guid whisperId, Enum whisperStatusEnum)
