@@ -20,5 +20,10 @@ namespace LinkedIt.Services.ControllerServices.IControllerServices
 
 		Task<APIResponse> AddWhisperWithNewPhantomSignalForUserAsync(String senderId,
 			AddWhisperWithNewPhantomSignalDTO addWhisperDto);
+
+		APIResponse GetWhisperStatusOptions();
+
+		Task<APIResponse> UpdateWhisperStatusForUserAsync(String receiverId, Guid whisperId,
+			WhisperStatusUpdateDTO whisperStatusUpdateDto);
 	}
 }

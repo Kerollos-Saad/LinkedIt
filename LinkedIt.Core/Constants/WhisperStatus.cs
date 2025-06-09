@@ -11,6 +11,6 @@ namespace LinkedIt.Core.Constants
 		public const string WhisperStatusPending = "Pending";
 		public const string WhisperStatusApproved = "Approved";
 		public const string WhisperStatusRejected = "Rejected";
-		public const string WhisperStatusRepoted = "Repoted";
+		public const string WhisperStatusReported = "Reported";
 	}
 }

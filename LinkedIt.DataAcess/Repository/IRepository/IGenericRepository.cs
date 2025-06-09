@@ -19,6 +19,12 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 		// ---------------------------------------------------------------------
 		// ---------------------------------------------------------------------
 
+		bool IsExist(Expression<Func<T, bool>> filter);
+		Task<bool> IsExistAsync(Expression<Func<T, bool>> filter);
+
+		// ---------------------------------------------------------------------
+		// ---------------------------------------------------------------------
+
 		T Add(T entity);
 		Task<T> AddAsync(T entity);
 

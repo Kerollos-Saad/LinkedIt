@@ -10,6 +10,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using LinkedIt.Core.DTOs.Whisper;
+using LinkedIt.Core.Enums;
 
 namespace LinkedIt.Services.ControllerServices
 {
@@ -133,6 +134,49 @@ namespace LinkedIt.Services.ControllerServices
 				return APIResponse.Fail(new List<string> { $"{result.ErrorMessage}" });
 
 			response.SetResponseInfo(HttpStatusCode.Created, null, new { WhisperId = result.Data}, true);
+			return response;
+		}
+
+		public APIResponse GetWhisperStatusOptions()
+		{
+			var response = new APIResponse();
+			var statusList = Enum.GetValues(typeof(WhisperStatusEnum))
+				.Cast<WhisperStatusEnum>()
+				.Select(s => new
+				{
+					key = s.ToString(),
+					value = (int)s
+				});
+
+			response.SetResponseInfo(HttpStatusCode.OK, null, statusList, true);
+			return response;
+		}
+
+		public async Task<APIResponse> UpdateWhisperStatusForUserAsync(string receiverId, Guid whisperId, WhisperStatusUpdateDTO whisperStatusUpdateDto)
+		{
+			var response = new APIResponse();
+
+			if (String.IsNullOrEmpty(receiverId))
+				return APIResponse.Fail(new List<string> { "UnAuthorize" }, HttpStatusCode.Unauthorized);
+			if (whisperId == Guid.Empty)
+				return APIResponse.Fail(new List<string> { "UnValid Whisper Id" });
+
+			var userExist = await _db.User.IsExistAsync(receiverId);
+			var whisperExist = await _db.Whisper.IsExistAsync(whisperId);
+			if (!userExist)
+				return APIResponse.Fail(new List<string> { "User Does Not Exist" }, HttpStatusCode.NotFound);
+			if (!whisperExist)
+				return APIResponse.Fail(new List<string> { "Whisper Does Not Exist" }, HttpStatusCode.NotFound);
+
+			var whisperHisProperty = await _db.Whisper.IsExistAsync(w => w.Id == whisperId && w.ReceiverId == receiverId);
+			if(!whisperHisProperty)
+				return APIResponse.Fail(new List<string> { "You Are Not Receiver Of This Whisper, Only Receivers Can Change Whisper Status" }, HttpStatusCode.Unauthorized);
+
+			var result = await _db.Whisper.UpdateWhisperStatusAsync(whisperId, whisperStatusUpdateDto);
+			if(!result.IsSuccess)
+				return APIResponse.Fail(new List<string> { $"{result.ErrorMessage}" });
+
+			response.SetResponseInfo(HttpStatusCode.OK, null, new { WhisperId = result.Data }, true);
 			return response;
 		}
 	}

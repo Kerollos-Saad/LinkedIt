@@ -114,5 +114,31 @@ namespace LinkedIt.DataAcess.Repository
 				return OperationResult<Guid>.Failure($"Exception occurred: {ex.Message}");
 			}
 		}
+
+		public async Task<OperationResult<bool>> UpdateWhisperStatusAsync(Guid whisperId, WhisperStatusUpdateDTO whisperStatusUpdateDto)
+		{
+			var existWhisper = await _db.Whispers.FirstOrDefaultAsync(w => w.Id == whisperId);
+
+			await using var transaction = await _db.Database.BeginTransactionAsync();
+			try
+			{
+				existWhisper!.Status = whisperStatusUpdateDto.Status.ToString();
+
+				var success = await _db.SaveChangesAsync();
+				if (success < 1)
+				{
+					await transaction.RollbackAsync();
+					return OperationResult<bool>.Failure("Failed to save whisper");
+				}
+
+				await transaction.CommitAsync();
+				return OperationResult<bool>.Success(true);
+			}
+			catch (Exception ex)
+			{
+				await transaction.RollbackAsync();
+				return OperationResult<bool>.Failure($"Exception occurred: {ex.Message}");
+			}
+		}
 	}
 }

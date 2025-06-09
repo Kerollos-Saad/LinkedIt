@@ -34,6 +34,22 @@ namespace LinkedIt.DataAcess.Repository
 			return entity != null;
 		}
 
+		public bool IsExist(Expression<Func<T, bool>> filter)
+		{
+			if (filter == null)
+				throw new ArgumentNullException(nameof(filter));
+
+			return _db.Set<T>().Any(filter);
+		}
+
+		public async Task<bool> IsExistAsync(Expression<Func<T, bool>> filter)
+		{
+			if (filter == null)
+				throw new ArgumentNullException(nameof(filter));
+
+			return await _db.Set<T>().AnyAsync(filter);
+		}
+
 		public T Add(T entity)
 		{
 			_db.Set<T>().Add(entity);

@@ -54,6 +54,13 @@ namespace LinkedIt.API.Controllers
 			};
 		}
 
+		[HttpGet("status-options")]
+		public IActionResult GetWhisperStatusOptions()
+		{
+			var response = _whisperService.GetWhisperStatusOptions();
+			return Ok(response);
+		}
+
 		[HttpPost("ExistSignal")]
 		public async Task<IActionResult> AddWhisperWithExistPhantomSignal([FromBody] AddWhisperWithExistPhantomSignalDTO addWhisperWithExistPhantomSignalDto)
 		{
@@ -87,21 +94,21 @@ namespace LinkedIt.API.Controllers
 			return Ok();
 		}
 
-		//[HttpPost("{whisperId}/Status")]
-		//public async Task<IActionResult> AddWhisperStatus([FromRoute] Guid whisperId, Enum whisperStatusEnum)
-		//{
-		//	var receiverId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+		[HttpPut("{whisperId}/Status")]
+		public async Task<IActionResult> UpdateWhisperStatus([FromRoute] Guid whisperId,[FromBody] WhisperStatusUpdateDTO whisperStatusUpdateDto)
+		{
+			var receiverId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		//	var response = await _whisperService.AddWhisperStatusForUserAsync(receiverId, whisperId, whisperStatusEnum);
+			var response = await _whisperService.UpdateWhisperStatusForUserAsync(receiverId, whisperId, whisperStatusUpdateDto);
 
-		//	return response.StatusCode switch
-		//	{
-		//		HttpStatusCode.Unauthorized => Unauthorized(response),
-		//		HttpStatusCode.BadRequest => BadRequest(response),
-		//		HttpStatusCode.NotFound => NotFound(response),
-		//		_ => Ok(response)
-		//	};
-		//}
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				HttpStatusCode.BadRequest => BadRequest(response),
+				HttpStatusCode.NotFound => NotFound(response),
+				_ => Ok(response)
+			};
+		}
 
 		//[HttpPut("{updateWhisperDto}")]
 		//public async Task<IActionResult> UpdateWhisper([FromRoute] Guid whisperId, [FromBody] UpdateWhisperDTO updateWhisperDto)
