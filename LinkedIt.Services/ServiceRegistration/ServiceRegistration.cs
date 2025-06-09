@@ -24,6 +24,7 @@ namespace LinkedIt.Services.ServiceRegistration
 			services.AddScoped<ISignalReactionsService, SignalReactionsService>();
 			services.AddScoped<ISignalCommentService, SignalCommentService>();
 			services.AddScoped<IResignalService, ResignalService>();
+			services.AddScoped<IWhisperService, WhisperService>();
 		}
 	}
 }

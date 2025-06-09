@@ -11,8 +11,11 @@ using LinkedIt.Core.DTOs.PhantomSignal;
 using LinkedIt.Core.DTOs.SignalComment;
 using LinkedIt.Core.DTOs.SignalReaction;
 using LinkedIt.Core.DTOs.User;
+using LinkedIt.Core.DTOs.Whisper;
+using LinkedIt.Core.DTOs.WhisperTalk;
 using LinkedIt.Core.Models.Phantom_Signal;
 using LinkedIt.Core.Models.User;
+using LinkedIt.Core.Models.Whisper;
 
 namespace LinkedIt.Core.Mapper
 {
@@ -72,6 +75,13 @@ namespace LinkedIt.Core.Mapper
 				.ForMember(dest => dest.PhantomSignal, opt => opt.MapFrom(src => src.PhantomSignal))
 				.ForMember(dest => dest.UserSignal, opt => opt.MapFrom(src => src.PhantomSignal.ApplicationUser))
 				.ForMember(dest => dest.UserResignal, opt => opt.MapFrom(src => src.ApplicationUser));
+
+			// Get Whisper With All Details
+
+			CreateMap<WhisperTalk, WhisperTalkDetailsDTO>()
+				.ForMember(dest => dest.SenderUserName, opt => opt.MapFrom(src => src.Sender.UserName));
+
+			CreateMap<Whisper, WhisperDetailsDTO>();
 		}
 	}
 }

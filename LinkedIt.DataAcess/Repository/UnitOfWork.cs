@@ -28,7 +28,8 @@ namespace LinkedIt.DataAcess.Repository
 		public IPhantomSignalUpRepository PhantomSignalUp { get; private set; }
 		public IPhantomSignalDownRepository PhantomSignalDown { get; private set; }
 		public IPhantomSignalCommentRepository PhantomSignalComment { get; private set; }
-		public IPhantomResignalRepository PhantomResignal { get; }
+		public IPhantomResignalRepository PhantomResignal { get; private set; }
+		public IWhisperRepository Whisper { get; private set; }
 
 		public UnitOfWork(ApplicationDbContext db, IMapper mapper, IConfiguration config,
 			UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
@@ -46,6 +47,7 @@ namespace LinkedIt.DataAcess.Repository
 			PhantomSignalDown = new PhantomSignalDownRepository(db);
 			PhantomSignalComment = new PhantomSignalCommentRepository(db, mapper);
 			PhantomResignal = new PhantomResignalRepository(db, mapper);
+			Whisper = new WhisperRepository(db, mapper);
 		}
 
 		public async Task<bool> SaveAsync()

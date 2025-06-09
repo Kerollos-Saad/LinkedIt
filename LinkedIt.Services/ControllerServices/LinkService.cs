@@ -43,7 +43,7 @@ namespace LinkedIt.Services.ControllerServices
 
 			var isAlreadyLinking = await _db.LinkUser.IsAlreadyLinking(linkerId, userToLink.Id);
 
-			if (isAlreadyLinking == true)
+			if (isAlreadyLinking)
 				return APIResponse.Fail(new List<string> { "You are already linking with this user." });
 
 			var success = await _db.LinkUser.LinkUser(linkerId, userToLink.Id);
@@ -79,7 +79,7 @@ namespace LinkedIt.Services.ControllerServices
 
 			var isAlreadyLinking = await _db.LinkUser.IsAlreadyLinking(linkerId, userToLink.Id);
 
-			if (isAlreadyLinking == false)
+			if (!isAlreadyLinking)
 				return APIResponse.Fail(new List<string> { "You are already unLinking with this user." });
 
 			var success = await _db.LinkUser.UnLinkUser(linkerId, userToLink.Id);
@@ -141,10 +141,12 @@ namespace LinkedIt.Services.ControllerServices
 			if (userId == targetUser.Id)
 				return APIResponse.Fail(new List<string> { "How is it even possible to Find Mutual Linkers with yourself Psycho !!." });
 
-			var userLinkTarget = await _db.LinkUser.IsAlreadyLinking(userId, targetUser.Id);
-			var targetLinkUser= await _db.LinkUser.IsAlreadyLinking(targetUser.Id, userId);
+			var usersAreLinked =
+				await _db.LinkUser.IsAlreadyLinking(userId, targetUser.Id)
+				&&
+				await _db.LinkUser.IsAlreadyLinking(targetUser.Id, userId);
 
-			if (userLinkTarget == false || targetLinkUser == false)
+			if (!usersAreLinked)
 				return APIResponse.Fail(new List<string> { "Users are not connected mutually !!." });
 
 			var mutualLinkers = await _db.LinkUser.GetMutualLinkersAsync(userId, targetUser.Id);

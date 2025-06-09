@@ -10,7 +10,7 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 {
 	public interface ILinkUserRepository : IGenericRepository<UserLink>
 	{
-		Task<bool?> IsAlreadyLinking(String linkerId, String linkedId);
+		Task<bool> IsAlreadyLinking(String linkerId, String linkedId);
 
 		Task<bool> LinkUser(String linkerId, String linkedId);
 		Task<bool> UnLinkUser(String linkerId, String linkedId);

@@ -15,6 +15,7 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 		IPhantomSignalDownRepository PhantomSignalDown { get; }
 		IPhantomSignalCommentRepository PhantomSignalComment { get; }
 		IPhantomResignalRepository PhantomResignal { get; }
+		IWhisperRepository Whisper { get; }
 		Task<bool> SaveAsync();
 	}
 }

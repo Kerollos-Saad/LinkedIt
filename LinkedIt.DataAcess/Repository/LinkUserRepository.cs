@@ -19,7 +19,7 @@ namespace LinkedIt.DataAcess.Repository
 			this._db = db;
 		}
 
-		public async Task<bool?> IsAlreadyLinking(string linkerId, string linkedId)
+		public async Task<bool> IsAlreadyLinking(string linkerId, string linkedId)
 		{
 			var follow = await _db.UserLinks.AnyAsync(uf =>
 				uf.LinkerUserId == linkerId && uf.LinkedUserId == linkedId);
