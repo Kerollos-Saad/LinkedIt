@@ -176,7 +176,7 @@ namespace LinkedIt.Services.ControllerServices
 			if(!result.IsSuccess)
 				return APIResponse.Fail(new List<string> { $"{result.ErrorMessage}" });
 
-			response.SetResponseInfo(HttpStatusCode.OK, null, new { WhisperId = result.Data }, true);
+			response.SetResponseInfo(HttpStatusCode.OK, null, new { WhisperId = whisperId }, true);
 			return response;
 		}
 	}
