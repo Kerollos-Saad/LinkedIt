@@ -16,5 +16,6 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 		Task<OperationResult<Guid>> AddWhisperWithExistPhantomSignalAsync(String senderId, AddWhisperWithExistPhantomSignalDTO addWhisperDto);
 		Task<OperationResult<Guid>> AddWhisperWithNewPhantomSignalAsync(String senderId, AddWhisperWithNewPhantomSignalDTO addWhisperDto);
 		Task<OperationResult<bool>> UpdateWhisperStatusAsync(Guid whisperId, WhisperStatusUpdateDTO whisperStatusUpdateDto);
+		Task<OperationResult<bool>> RemoveWhisperAsync(Guid whisperId);
 	}
 }

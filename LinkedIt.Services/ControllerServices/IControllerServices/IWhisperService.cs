@@ -25,5 +25,7 @@ namespace LinkedIt.Services.ControllerServices.IControllerServices
 
 		Task<APIResponse> UpdateWhisperStatusForUserAsync(String receiverId, Guid whisperId,
 			WhisperStatusUpdateDTO whisperStatusUpdateDto);
+
+		Task<APIResponse> RemoveWhisperForUserAsync(String userId, Guid whisperId);
 	}
 }

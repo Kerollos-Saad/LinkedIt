@@ -179,5 +179,33 @@ namespace LinkedIt.Services.ControllerServices
 			response.SetResponseInfo(HttpStatusCode.OK, null, new { WhisperId = whisperId }, true);
 			return response;
 		}
+
+		public async Task<APIResponse> RemoveWhisperForUserAsync(string userId, Guid whisperId)
+		{
+			var response = new APIResponse();
+
+			if (String.IsNullOrEmpty(userId))
+				return APIResponse.Fail(new List<string> { "UnAuthorize" }, HttpStatusCode.Unauthorized);
+			if (whisperId == Guid.Empty)
+				return APIResponse.Fail(new List<string> { "UnValid Whisper Id" });
+
+			var userExist = await _db.User.IsExistAsync(userId);
+			var whisperExist = await _db.Whisper.IsExistAsync(whisperId);
+			if (!userExist)
+				return APIResponse.Fail(new List<string> { "User Does Not Exist" }, HttpStatusCode.NotFound);
+			if (!whisperExist)
+				return APIResponse.Fail(new List<string> { "Whisper Does Not Exist" }, HttpStatusCode.NotFound);
+
+			var isWhisperHisProperty = await _db.Whisper.IsExistAsync(w=>w.Id == whisperId && w.SenderId == userId);
+			if (!isWhisperHisProperty)
+				return APIResponse.Fail(new List<string> { "UnAuthorize, Your Are not the sender of this Whisper" }, HttpStatusCode.Unauthorized);
+
+			var result = await _db.Whisper.RemoveWhisperAsync(whisperId);
+			if (!result.IsSuccess)
+				return APIResponse.Fail(new List<string> { $"{result.ErrorMessage}" });
+
+			response.SetResponseInfo(HttpStatusCode.OK, null, new { WhisperId = whisperId }, true);
+			return response;
+		}
 	}
 }

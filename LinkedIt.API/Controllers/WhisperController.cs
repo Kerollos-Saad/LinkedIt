@@ -110,36 +110,20 @@ namespace LinkedIt.API.Controllers
 			};
 		}
 
-		//[HttpPut("{updateWhisperDto}")]
-		//public async Task<IActionResult> UpdateWhisper([FromRoute] Guid whisperId, [FromBody] UpdateWhisperDTO updateWhisperDto)
-		//{
-		//	var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+		[HttpDelete("{whisperId}")]
+		public async Task<IActionResult> RemoveWhisper([FromRoute] Guid whisperId)
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		//	var response = await _whisperService.UpdateWhisperForUserAsync(userId, whisperId, updateWhisperDto);
+			var response = await _whisperService.RemoveWhisperForUserAsync(userId, whisperId);
 
-		//	return response.StatusCode switch
-		//	{
-		//		HttpStatusCode.Unauthorized => Unauthorized(response),
-		//		HttpStatusCode.BadRequest => BadRequest(response),
-		//		HttpStatusCode.NotFound => NotFound(response),
-		//		_ => Ok(response)
-		//	};
-		//}
-
-		//[HttpDelete("{whisperId}")]
-		//public async Task<IActionResult> RemoveWhisper([FromRoute] Guid whisperId)
-		//{
-		//	var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-		//	var response = await _whisperService.RemoveWhisperForUserAsync(userId, whisperId);
-
-		//	return response.StatusCode switch
-		//	{
-		//		HttpStatusCode.Unauthorized => Unauthorized(response),
-		//		HttpStatusCode.BadRequest => BadRequest(response),
-		//		HttpStatusCode.NotFound => NotFound(response),
-		//		_ => Ok(response)
-		//	};
-		//}
+			return response.StatusCode switch
+			{
+				HttpStatusCode.Unauthorized => Unauthorized(response),
+				HttpStatusCode.BadRequest => BadRequest(response),
+				HttpStatusCode.NotFound => NotFound(response),
+				_ => Ok(response)
+			};
+		}
 	}
 }
