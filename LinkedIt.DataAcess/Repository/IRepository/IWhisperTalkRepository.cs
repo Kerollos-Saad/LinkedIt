@@ -14,5 +14,6 @@ namespace LinkedIt.DataAcess.Repository.IRepository
 	{
 		Task<OperationResult<ICollection<WhisperTalkDetailsDTO>>> GetWhisperTalksAsync(Guid whisperId);
 		Task<OperationResult<int>> AddWhisperTalkAsync(String senderId, Guid whisperId, AddWhisperTalkDTO addWhisperTalkDto);
+		Task<OperationResult<bool>> RemoveWhisperTalkAsync(int talkId);
 	}
 }

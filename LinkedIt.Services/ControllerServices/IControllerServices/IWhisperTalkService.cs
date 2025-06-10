@@ -12,5 +12,6 @@ namespace LinkedIt.Services.ControllerServices.IControllerServices
 	{
 		Task<APIResponse> GetWhisperTalksForUserAsync(String userId, Guid whisperId);
 		Task<APIResponse> AddWhisperTalkForUserAsync(String senderId, Guid whisperId, AddWhisperTalkDTO whisperTalkDto);
+		Task<APIResponse> RemoveWhisperTalkForUserAsync(String userId, int talkId);
 	}
 }

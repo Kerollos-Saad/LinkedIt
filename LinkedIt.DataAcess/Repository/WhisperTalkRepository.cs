@@ -67,5 +67,31 @@ namespace LinkedIt.DataAcess.Repository
 				return OperationResult<int>.Failure($"Exception occurred: {ex.Message}");
 			}
 		}
+
+		public async Task<OperationResult<bool>> RemoveWhisperTalkAsync(int talkId)
+		{
+			var talk = await _db.WhispersTalks.FirstOrDefaultAsync(t => t.Id == talkId);
+
+			await using var transaction = await _db.Database.BeginTransactionAsync();
+			try
+			{
+				_db.WhispersTalks.Remove(talk!);
+
+				var success = await _db.SaveChangesAsync();
+				if (success < 1)
+				{
+					await transaction.RollbackAsync();
+					return OperationResult<bool>.Failure("Failed to Remove talk");
+				}
+
+				await transaction.CommitAsync();
+				return OperationResult<bool>.Success(true);
+			}
+			catch (Exception ex)
+			{
+				await transaction.RollbackAsync();
+				return OperationResult<bool>.Failure($"Exception occurred: {ex.Message}");
+			}
+		}
 	}
 }

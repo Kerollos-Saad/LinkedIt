@@ -1,4 +1,6 @@
-﻿using LinkedIt.Core.Response;
+﻿using LinkedIt.Core.DTOs.WhisperTalk;
+using LinkedIt.Core.Models.Whisper;
+using LinkedIt.Core.Response;
 using LinkedIt.DataAcess.Repository.IRepository;
 using LinkedIt.Services.ControllerServices.IControllerServices;
 using System;
@@ -7,7 +9,6 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using LinkedIt.Core.DTOs.WhisperTalk;
 
 namespace LinkedIt.Services.ControllerServices
 {
@@ -72,6 +73,32 @@ namespace LinkedIt.Services.ControllerServices
 				return APIResponse.Fail(new List<string> { $"{result.ErrorMessage}" });
 
 			response.SetResponseInfo(HttpStatusCode.OK, null, new { TalkId = result.Data }, true);
+			return response;
+		}
+
+		public async Task<APIResponse> RemoveWhisperTalkForUserAsync(string userId, int talkId)
+		{
+			var response = new APIResponse();
+
+			if (String.IsNullOrEmpty(userId))
+				return APIResponse.Fail(new List<string> { "UnAuthorize" }, HttpStatusCode.Unauthorized);
+
+			var userExist = await _db.User.IsExistAsync(userId);
+			var talkExist = await _db.WhisperTalk.IsExistAsync(talkId);
+			if (!userExist)
+				return APIResponse.Fail(new List<string> { "User Does Not Exist" }, HttpStatusCode.NotFound);
+			if (!talkExist)
+				return APIResponse.Fail(new List<string> { "Whisper Talk Does Not Exist" }, HttpStatusCode.NotFound);
+
+			var isTalkHisProperty = await _db.WhisperTalk.IsExistAsync(t => t.Id == talkId && t.SenderId == userId);
+			if (!isTalkHisProperty)
+				return APIResponse.Fail(new List<string> { "UnAuthorize, Not Your Talk" }, HttpStatusCode.Unauthorized);
+
+			var result = await _db.WhisperTalk.RemoveWhisperTalkAsync(talkId);
+			if (!result.IsSuccess)
+				return APIResponse.Fail(new List<string> { $"{result.ErrorMessage}" });
+
+			response.SetResponseInfo(HttpStatusCode.OK, null, new { Success = result.Data }, true);
 			return response;
 		}
 	}
