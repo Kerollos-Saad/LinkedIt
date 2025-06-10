@@ -94,6 +94,10 @@ namespace LinkedIt.Services.ControllerServices
 			if (!isTalkHisProperty)
 				return APIResponse.Fail(new List<string> { "UnAuthorize, Not Your Talk" }, HttpStatusCode.Unauthorized);
 
+			var isWithinAllowedPeriod = await _db.WhisperTalk.IsExistAsync(t=>t.Id == talkId && DateTime.Now < t.TalkDate.AddHours(24));
+			if(!isWithinAllowedPeriod)
+				return APIResponse.Fail(new List<string> { "Can't Remove Talk After 24 hours." });
+
 			var result = await _db.WhisperTalk.RemoveWhisperTalkAsync(talkId);
 			if (!result.IsSuccess)
 				return APIResponse.Fail(new List<string> { $"{result.ErrorMessage}" });

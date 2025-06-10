@@ -55,7 +55,7 @@ namespace LinkedIt.DataAcess.Repository
 				if (success < 1)
 				{
 					await transaction.RollbackAsync();
-					return OperationResult<int>.Failure("Failed to save whisper");
+					return OperationResult<int>.Failure("Failed to save Talk");
 				}
 
 				await transaction.CommitAsync();
